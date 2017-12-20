@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>projector-ordering-system</title>
+  </head>
+
+  </body>
+  <script>
+
+const position = 8;
+
+let Touchwidth  = 301;
+let Touchheight = 376.3;
+
+let Insettop    = Touchheight * (position/100);       // (to set the touch position 5% in from active area edge)
+let Insetright  = Touchwidth  * (position/100);       // (to set the touch position 5% in from active area edge)
+let Insetbottom = Touchheight * (position/100);       // (to set the touch position 5% in from active area edge)
+let Insetleft   = Touchwidth  * (position/100);       // (to set the touch position 5% in from active area edge)
+
+console.log(Insettop, Insetright, Insetbottom, Insetleft); // 18.815 15.05 18.815 15.05
+
+let Touchtop    = 111.85;
+let Touchright  = 243;
+let Touchbottom = 111.85;
+let Touchleft   = 256;
+
+let Displaywidth  = 800;
+let Displayheight = 600;
+
+let Top    = Math.round( (Touchtop + Insettop) / Displayheight * 100);
+let Right  = Math.round( (Touchright + Insetright) / Displaywidth * 100);
+let Bottom = Math.round( (Touchbottom + Insetbottom) / Displayheight * 100);
+let Left   = Math.round( (Touchleft + Insetleft) / Displaywidth * 100);
+
+console.log(Touchtop + Insettop);         // 130.665
+console.log(Touchright + Insetright);     // 258.05
+console.log(Touchbottom + Insetbottom);   // 130.665
+console.log(Touchleft + Insetleft);       // 271.05
+
+console.log(Top, Right, Bottom, Left); // 22 32 22 34
+
+  </script>
+</html>
