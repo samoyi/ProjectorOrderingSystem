@@ -1,19 +1,32 @@
 <template>
-  <div id="ordering">
-    <h2>{{title}}</h2>
-  </div>
+    <dial-component
+            :items="orderingCatas"
+            :diameter="142"
+            :icon-dir="'./server-side/public/images/icons/ordering/'"
+            :icon-type="'png'">
+    </dial-component>
 </template>
 
 <script>
+
+import dial from './dial';
+
 export default {
-  name: 'game',
-  data () {
-    return {
-      catas: [
-          
-      ],
-    }
-  }
+    data () {
+        return {
+            catas: [
+
+            ],
+        }
+    },
+    components: {
+        'dial-component': dial,
+    },
+    data () {
+        return {
+            orderingCatas:['cake', 'drink', 'cake', 'drink'],
+        }
+    },
 }
 </script>
 
