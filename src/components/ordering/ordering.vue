@@ -3,7 +3,8 @@
             :items="orderingCatas"
             :diameter="142"
             :icon-dir="'./server-side/public/images/icons/ordering/'"
-            :icon-type="'png'">
+            :icon-type="'png'"
+            @dial-enter="selectCata">
     </dial-component>
 </template>
 
@@ -14,17 +15,16 @@ import dial from './dial';
 export default {
     data () {
         return {
-            catas: [
-
-            ],
+            orderingCatas:['cake', 'drink'],
         }
     },
     components: {
         'dial-component': dial,
     },
-    data () {
-        return {
-            orderingCatas:['cake', 'drink', 'cake', 'drink'],
+
+    methods: {
+        selectCata(sCata){
+            console.log(sCata);
         }
     },
 }

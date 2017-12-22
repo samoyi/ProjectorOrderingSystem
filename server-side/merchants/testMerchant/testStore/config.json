@@ -1,3 +1,14 @@
 {
-    "primaryCatas": ["ordering", "game", "ordering", "game"]
+    "primaryCatas": ["ordering", "game", "ordering", "game"],
+    "menu": {
+        "cake": [
+            {
+                "name": "cake1",
+                "flavor": "cake1 falvor",
+                "material": "cake1 material",
+                "recom"
+            }
+        ],
+        "drink": []
+    }
 }
