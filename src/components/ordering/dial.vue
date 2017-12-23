@@ -3,7 +3,8 @@
 <!-- props
 * items属性     数组    数组项为所有选项的名称，该选项图标被点击后emit的事件会带上响应
                          的名称作为参数。同时该名称也会和iconDir属性结合起来作为选项
-                         图标的路径，所以图标图片也必须是以对应名称命名的
+                         图标的路径，所以图标图片也必须是以对应名称命名的。如果名称为
+                         空字符串，仍会保留空位，但不会显示图标。
 * diameter属性  整数    接收圆盘的直径，像素值的整数部分
 * iconDir属性   字符串  接受图标图片所在目录，结尾要有“/”
 * iconType属性  字符串  接受图标图片的扩展名
@@ -30,7 +31,7 @@
                 <div class="divider" :style="tribleInnerStyle"></div>
             </div>
             <div class="divider" id="double-divider"
-                    v-else
+                    v-if="items.length===4"
                     :style="{height: dividerWidth()+'px'}">
                 <div class="divider" :style="doubleInnerStyle"></div>
             </div>
@@ -39,7 +40,7 @@
             <!-- icon-wrapper初始位置都在贴下居中，根据需要旋转 -->
             <div class="icon-wrapper" v-for="(cata,index) in items"
                      :style="iconWrapperStyle(items.length, index)">
-                <img :src="iconDir + cata + '.' + iconType"
+                <img v-if="cata" :src="iconDir + cata + '.' + iconType"
                         :style="{bottom: 2000/110+'%'}" @click="enter(cata)" />
             </div>
         </div>
