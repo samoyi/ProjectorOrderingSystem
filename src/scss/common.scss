@@ -34,7 +34,9 @@ $SCREEN_HEIGHT: 1024px;
 $TOUCH_WIDTH: 481px;
 $TOUCH_HEIGHT: 385px;
 $TOUCH_TOP: ($SCREEN_HEIGHT - $TOUCH_HEIGHT)/2;
+$TOUCH_BOTTOM: $TOUCH_TOP;
 $TOUCH_LEFT: ($SCREEN_WIDTH - $TOUCH_WIDTH)/2;
+$TOUCH_RIGHT: $TOUCH_LEFT;
 
 @mixin absCenter{
     position: absolute; top: 0; right: 0; bottom: 0; left: 0; margin: auto;

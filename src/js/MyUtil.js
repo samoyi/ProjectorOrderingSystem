@@ -11,62 +11,26 @@ function findAsciiIndexes(str){
     return aIndex;
 }
 
+// 若干个点均匀分布在圆环上，得出每个点相对于圆心的坐标
+/**
+ * @param nRadius     {integer}  半径像素值
+ * @param nAmount     {integer} 用几个点将圆环均分
+ * @param nInitRadian {integer} 第一个点的弧度制，默认为0，3点钟方向，逆时针为正方向
+ */
+function coordinatesOnRing(nRadius, nAmount, nInitRadian=0){
+    const nRadianInterval = Math.PI*2/nAmount;
+    let nRadian = 0,
+        aCoordinate = [];
 
-function DialAngle(x, y, r, curRotation=0){
-
-    let startX = null, // touchstart X
-        startY = null, // touchstart Y
-        touchstartAngle = null, // angle value when touchstart
-        lastAngle = 0, // angle value after the last touchmove
-        moveEndAngle = 0, // angle value after a touchmove
-        moveAngles = 0; // angles of rotation on every touchmove
-
-     // returned by curDeg, for 'transform: rotateZ';
-    let cssRotationValue = 0;
-
-    // if a point is inside the circle
-    function isInsideCircle(moveX, moveY){
-        return moveX>=x-r && moveX<=x+r && moveY>=y-r && moveY<=y+r;
+    for(let i=0; i<nAmount; i++){
+        nRadian = i*nRadianInterval+nInitRadian;
+        aCoordinate.push([Math.round(Math.cos(nRadian)*nRadius),
+                        Math.round(-Math.sin(nRadian)*nRadius)]);
     }
-
-    // calculate angle value of a given point
-    function touchAngle(touchX, touchY){
-        let arctan = Math.atan((touchY-y)/(touchX-x)),
-            radian = Math.PI/2 + arctan + ((touchX<x)?Math.PI:0),
-            angle = radian*180/Math.PI;
-        return angle;
-    }
-
-    // input the coordinates of touchstart
-    this.start = function(nStartX, nStartY, nNewAngle){
-        if(isInsideCircle(nStartX, nStartY)){
-            startX = nStartX,
-            startY = nStartY;
-            touchstartAngle = touchAngle(startX, startY);
-            lastAngle = touchstartAngle;
-            if(nNewAngle!==null) cssRotationValue = nNewAngle;
-        }
-        else{ // empty the last record
-            startX = null;
-            startY = null;
-            touchstartAngle = null;
-        }
-    };
-
-    // calculate dial rotation angle after a touchmove
-    this.curDeg = function(moveX, moveY){
-        if(touchstartAngle !==null){
-            moveEndAngle = touchAngle(moveX, moveY);
-            moveAngles = moveEndAngle - lastAngle;
-            cssRotationValue += moveAngles;
-            lastAngle = lastAngle + moveAngles;
-            // console.log('c ' + cssRotationValue);
-            return cssRotationValue + curRotation;
-        }
-    };
+    return aCoordinate;
 }
 
 module.exports = {
     findAsciiIndexes,
-    DialAngle,
+    coordinatesOnRing,
 };

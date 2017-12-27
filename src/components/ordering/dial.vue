@@ -17,7 +17,7 @@
 * 点击图标圆盘不转动，因为不知道是谁点的，所以不知道要转到哪个方向
 -->
 <template>
-    <div id="dial" :style="dialStyle">
+    <div id="dial" :style="dialStyle" :class="{transition: bTransition}">
         <!-- 分割线独立于图标计算 -->
         <div id="divider-wrapper">
             <div class="divider" id="single-divider"
@@ -48,6 +48,8 @@
 </template>
 
 <script>
+import DialRotation from '../../js/DialRotation';
+import styleConfig from '../../js/styleConfig';
 
 export default {
     props: {
@@ -58,6 +60,7 @@ export default {
     },
     data () {
         return {
+            bTransition: true,
         }
     },
     computed:{
@@ -137,6 +140,43 @@ export default {
             this.$emit('dial-enter', sCata);
         },
     },
+    mounted(){
+        let oDial = document.querySelector('#dial'),
+            nEndAngle = 0,
+            nNewAngle = null;
+        const dialRotation = new DialRotation.Rotation(styleConfig.SCREEN_WIDTH/2,
+                                    styleConfig.SCREEN_HEIGHT/2, this.diameter/2);
+
+        oDial.addEventListener('touchstart', (ev)=>{
+            this.bTransition = false;
+            dialRotation.start(ev.touches[0].clientX,
+                            ev.touches[0].clientY, nNewAngle);
+        });
+
+        dialRotation.throttling = false;
+        oDial.addEventListener('touchmove', (ev)=>{
+
+            if(!dialRotation.throttling){
+                dialRotation.throttling = true;
+                setTimeout(function(){
+                    dialRotation.throttling = false;
+                }, 50);
+                nEndAngle = dialRotation.curDeg(ev.changedTouches[0].clientX,
+                            ev.changedTouches[0].clientY);
+                oDial.style.transform = 'rotateZ('
+                    +nEndAngle+ 'deg)';
+            }
+        });
+
+        window.addEventListener('touchend', ()=>{
+            this.bTransition = true;
+            // transition到正的位置
+            let nIconAmount = this.items.length;
+            let n = dialRotation.adjust(nEndAngle, nIconAmount);
+            oDial.style.transform = 'rotateZ(' +n+ 'deg)';
+            nNewAngle = n;
+        });
+    },
 }
 </script>
 
@@ -188,5 +228,8 @@ export default {
             }
         }
     }
+}
+.transition{
+    transition: transform .5s;
 }
 </style>
