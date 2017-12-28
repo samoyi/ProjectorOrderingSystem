@@ -9,12 +9,12 @@
                         <td class="td">数量</td>
                         <td class="td">价格</td>
                     </tr>
-                    <tr class="tr" v-for="item in aCart">
+                    <tr class="tr" v-for="(item,index) in oCart.list">
                         <td class="td">{{item.name}}</td>
                         <td class="td">
-                            <span>-</span>
+                            <span @click="minus(item, index)">-</span>
                             {{item.amount}}
-                            <span>+</span>
+                            <span @click="add(item, index)">+</span>
                         </td>
                         <td class="td">{{item.price*item.amount/100}}</td>
                     </tr>
@@ -23,7 +23,7 @@
             <div id="total">总计：¥{{total}}</div>
         </div>
         <div class="back" @click="back">返回</div>
-        <div class="order" @click="order">下单</div>
+        <div class="order" v-show="total>0" @click="order">下单</div>
     </div>
 </template>
 
@@ -36,24 +36,34 @@ export default {
     },
     data () {
         return {
-            aCart: this.cart,
+            oCart: this.cart,
         }
     },
     methods: {
+        minus(item, index){
+            if(item.amount>0){
+                item.amount--;
+            }
+        },
+        add(item, index){
+            if(item.amount<9){
+                item.amount++;
+            }
+        },
         back(){
             this.$router.go(-1);
         },
         order(){
-
+            this.$router.push('pay');
         },
     },
     computed: {
         total(){
             let nTotal = 0;
-            this.aCart.forEach(item=>{
+            this.oCart.list.forEach(item=>{
                 nTotal += item.price*item.amount/100;
             });
-            console.log(nTotal);
+            this.oCart.total = nTotal;
             return nTotal;
         }
     },
@@ -71,6 +81,7 @@ export default {
 #cart{
     width: 100%; height: 100%;
     position: absolute; top: 0;
+    // transform: rotateZ(180deg);
     #list{
         width: 303px; height: 360px;
         border: 5px solid $BASIC_BLUE;
@@ -117,6 +128,14 @@ export default {
                     border-bottom: 1px solid $BASIC_BLUE;
                 }
             }
+        }
+        #tableWrapper::-webkit-scrollbar {
+          width: 5px;
+          height: 8px;
+          background-color: red;
+        }
+        #tableWrapper::-webkit-scrollbar-thumb {
+            background: #000;
         }
         #total{
             position: absolute;

@@ -3,7 +3,7 @@
         <div id="touchArea"></div>
         <router-view
             :store-data="storeData"
-            :cart="aCart"
+            :cart="oCart"
             @add="add"
             @order="order">
         </router-view>
@@ -22,21 +22,27 @@ export default {
                 primaryCatas: [],
                 menu: {},
             },
-            aCart: [],
+            oCart: {
+                total: 0,
+                list: [],
+            },
             oOrder: null,
+            bPaid: false, // 付款成功时，清空购物车；
+            bComplete: false, // 用户点击已上齐，则点餐结束，清空订单详情
+            // 付款成功后且点餐结束前，首页可以查看订单详情
         }
     },
     methods:{
         // 两款商品可以同名但id肯定不同，如果用户买了两个同名商品，这里用id来区分
         add(sCata, oItem){
-            let oFound = this.aCart.find(item=>{
+            let oFound = this.oCart.list.find(item=>{
                 return item.id === oItem.id;
             });
             if(oFound){
                 oFound.amount++;
             }
             else{
-                this.aCart.push({
+                this.oCart.list.push({
                     id: oItem.id,
                     amount: 1,
                     price: oItem.price,
@@ -45,8 +51,8 @@ export default {
             }
         },
         order(){
-            if(this.aCart.length){
-                this.aCart.forEach(item=>{
+            if(this.oCart.list.length){
+                this.oCart.list.forEach(item=>{
                     console.log(item.name + '：' +
                             (item.price/100)+'x'+item.amount);
                 });

@@ -8,6 +8,7 @@ import game from './components/game';
 import main_menu from './components/ordering/main_menu.vue';
 import ordering from './components/ordering/ordering.vue';
 import cart from './components/ordering/cart.vue';
+import pay from './components/ordering/pay.vue';
 
 const routes = [
     { path: '/', component: App },
@@ -15,6 +16,7 @@ const routes = [
     { path: '/main_menu', component: main_menu },
     { path: '/ordering', component: ordering },
     { path: '/cart', component: cart },
+    { path: '/pay', component: pay },
 ];
 
 const router = new VueRouter({

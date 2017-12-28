@@ -28,11 +28,11 @@
             下一页
         </div>
 
-        <div v-show="cart.length" class="order"
+        <div v-show="cart.list.length" class="order"
                 @click="order">查看/下单</div>
         <div v-show="selectedItem" class="add"
                 @click="add(selectedCata, selectedItem)">加入清单</div>
-        <div v-show="cart.length" class="order orderTop"
+        <div v-show="cart.list.length" class="order orderTop"
                 @click="order">查看/下单</div>
         <div v-show="selectedItem" class="add addTop"
                 @click="add(selectedCata, selectedItem)">加入清单</div>
