@@ -191,7 +191,7 @@ export default {
     #divider-wrapper{
         width: 100%; height: 100%;
         .divider{
-            background-color: #82d1e2;
+            background-color: $BASIC_BLUE;
         }
         #single-divider, #double-divider{
             width: 100%;

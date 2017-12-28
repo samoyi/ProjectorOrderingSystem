@@ -21,16 +21,31 @@ function coordinatesOnRing(nRadius, nAmount, nInitRadian=0){
     const nRadianInterval = Math.PI*2/nAmount;
     let nRadian = 0,
         aCoordinate = [];
-
+    if(nInitRadian<0){nInitRadian+=Math.PI*2}
     for(let i=0; i<nAmount; i++){
-        nRadian = i*nRadianInterval+nInitRadian;
+        nRadian = (i*nRadianInterval+nInitRadian)%(Math.PI*2);
         aCoordinate.push([Math.round(Math.cos(nRadian)*nRadius),
                         Math.round(-Math.sin(nRadian)*nRadius)]);
     }
     return aCoordinate;
 }
 
+// 和coordinatesOnRing一样，只不过返回弧度值
+function radiansOnRing(nRadius, nAmount, nInitRadian=0){
+    const nRadianInterval = Math.PI*2/nAmount;
+    let nRadian = 0,
+        aRadian = [];
+
+    if(nInitRadian<0){nInitRadian+=Math.PI*2}
+    for(let i=0; i<nAmount; i++){
+        nRadian = (i*nRadianInterval+nInitRadian)%(Math.PI*2);
+        aRadian.push(nRadian);
+    }
+    return aRadian;
+}
+
 module.exports = {
     findAsciiIndexes,
     coordinatesOnRing,
+    radiansOnRing,
 };

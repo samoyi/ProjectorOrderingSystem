@@ -38,6 +38,8 @@ $TOUCH_BOTTOM: $TOUCH_TOP;
 $TOUCH_LEFT: ($SCREEN_WIDTH - $TOUCH_WIDTH)/2;
 $TOUCH_RIGHT: $TOUCH_LEFT;
 
+$BASIC_BLUE: #82d1e2;
+
 @mixin absCenter{
     position: absolute; top: 0; right: 0; bottom: 0; left: 0; margin: auto;
 }

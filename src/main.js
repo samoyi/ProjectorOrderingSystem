@@ -7,12 +7,14 @@ import App from './App';
 import game from './components/game';
 import main_menu from './components/ordering/main_menu.vue';
 import ordering from './components/ordering/ordering.vue';
+import cart from './components/ordering/cart.vue';
 
 const routes = [
     { path: '/', component: App },
     { path: '/game', component: game },
     { path: '/main_menu', component: main_menu },
     { path: '/ordering', component: ordering },
+    { path: '/cart', component: cart },
 ];
 
 const router = new VueRouter({
