@@ -6,8 +6,10 @@
             :cart="oCart"
             :order-state="nOrderState"
             :position="nPosition"
+            :order="oOrder"
             @add="add"
             @order="order"
+            @paySuccess= "paySuccess"
             @complete="complete">
         </router-view>
     </div>
@@ -29,12 +31,18 @@ export default {
                 total: 0,
                 list: [],
             },
-            oOrder: null,
+            oOrder: {
+                curPaymentMethod: '', //支付时选择的支付方式
+                // 一个订单完成后，会把[购买物品、支付方式、支付时间]加入list
+                // 一个用户在点击“上齐了”之前的每次支付生成一个订单，汇集到oOrder里
+                list: [],
+                total: 0, // 总订单价格
+            },
             // bPaid: false, // 付款成功时，清空购物车；
             // bComplete: false, // 用户点击已上齐，则点餐结束，清空订单详情
             // 付款成功后，nOrderState变为1，清空购物车，首页可以查看订单详情
             // 用户点击已上齐，则点餐结束，清空订单详情，nOrderState变为0
-            nOrderState: 1,
+            nOrderState: 0,
             // 在操作方向有影响的情况下，例如进入购物车。0为当前方向，1为对向
             nPosition: 0,
         }
@@ -60,13 +68,35 @@ export default {
         order(){
             if(this.oCart.list.length){
                 this.oCart.list.forEach(item=>{
-                    console.log(item.name + '：' +
-                            (item.price/100)+'x'+item.amount);
                 });
             }
         },
+        paySuccess(list){
+            // 填写订单状态，然后清空购物车
+            let date = new Date();
+            this.oOrder.list.push({
+                items: list,
+                total: this.oCart.total,
+                paymentMethod: this.oOrder.curPaymentMethod==='wechat'?'微信':'支付宝',
+                time: date.getMonth()+1 +'月'+ date.getDate() +'日　'
+                        + date.getHours() +'时'+ date.getMinutes() + '分'
+                        + date.getSeconds() +'秒',
+            });
+            // 每一个单独订单的价格汇总到总订单价格
+            this.oOrder.total += this.oCart.total;
+            this.oCart = {
+                total: 0,
+                list: [],
+            };
+        },
         complete(){
+            // 清空订单状态
             this.nOrderState = 0;
+            this.oOrder = {
+                curPaymentMethod: '',
+                list: [],
+                total: 0,
+            };
         },
     },
     mounted(){
@@ -85,7 +115,6 @@ export default {
 @import "./scss/common.scss";
 
 #app{
-    background-color: pink;
     #touchArea{
         width: $TOUCH_WIDTH;
         height: $TOUCH_HEIGHT;
@@ -93,6 +122,7 @@ export default {
         top: $TOUCH_TOP;
         left: $TOUCH_LEFT;
         background: gray;
+        opacity: 0;
     }
 }
 </style>

@@ -19,23 +19,27 @@
         <div class="prev" v-show="pageSwitcher.oDisplayPageTip[selectedCata]
                     && (pageSwitcher.oPageIndex[selectedCata]!==0)"
                 @click="prevPage">
-            上一页
+            ◀
         </div>
         <div class="next" v-show="pageSwitcher.oDisplayPageTip[selectedCata]
                     && (pageSwitcher.oPageIndex[selectedCata]
                         !==pageSwitcher.oPageAmount[selectedCata]-1)"
                 @click="nextPage">
-            下一页
+            ▶
         </div>
 
         <div v-show="cart.list.length" class="order"
                 @click="order(0)">查看/下单</div>
         <div v-show="selectedItem" class="add"
                 @click="add(selectedCata, selectedItem)">加入清单</div>
+        <div class="back"
+                @click="back">返回</div>
         <div v-show="cart.list.length" class="order orderTop"
                 @click="order(1)">查看/下单</div>
         <div v-show="selectedItem" class="add addTop"
                 @click="add(selectedCata, selectedItem)">加入清单</div>
+        <div class="back backTop"
+                @click="back">返回</div>
 
         <div v-if="selectedItem" class="itemDetail">
             <div class="info">
@@ -133,7 +137,7 @@ export default {
         nextPage(){
             this.pageSwitcher.oPageIndex[this.selectedCata]++;
         },
-        itemStyle(nDisplayed, index){
+        itemStyle(nDisplayed, index){ // 图标随着转动保持竖直，如过山车
             const nListRadius = styleConfig.ORDERING_LIST_DIAMETER/2,
                   nItemRadius = styleConfig.ORDERING_ITEM_DIAMETER/2;
             let aCoordinate = MyUtil.coordinatesOnRing(nListRadius, nDisplayed
@@ -148,7 +152,7 @@ export default {
                 transform: 'rotateZ(' +nRotate+ 'deg)',
             };
         },
-        itemImageStyle(nDisplayed, index){
+        itemImageStyle(nDisplayed, index){ // 图片根据X轴上下颠倒
             const nListRadius = styleConfig.ORDERING_LIST_DIAMETER/2;
             let aAngle = MyUtil.radiansOnRing(nListRadius, nDisplayed
                                 , -Math.PI/2).map(radian=>radian*180/Math.PI);
@@ -189,6 +193,9 @@ export default {
             this.$router.push('cart');
             this.$parent.nPosition = nPosition;
         },
+        back(){
+            this.$router.go(-1);
+        },
     },
     watch:{
         selectedCata(){
@@ -196,10 +203,15 @@ export default {
             this.$nextTick(()=>{
                 let oList = document.querySelector('#list'),
                     nEndAngle = 0;
+
                 const nListRadius = styleConfig.ORDERING_LIST_DIAMETER/2;
                 const dialRotation = new DialRotation.Rotation(
-                            styleConfig.SCREEN_WIDTH/2, styleConfig.SCREEN_HEIGHT/2,
-                             nListRadius+styleConfig.ORDERING_ITEM_DIAMETER/2);
+                            styleConfig.SCREEN_WIDTH/2
+                            ,styleConfig.SCREEN_HEIGHT/2
+                            ,nListRadius+styleConfig.ORDERING_ITEM_DIAMETER/2
+                            ,this.nMenuAngle);
+                // 因为不同类别的餐品使用的统一转盘
+                // 不要每次切换类别都初始化一个转动对象
                 oList.addEventListener('touchstart', (ev)=>{
 
                     this.bTransition = false;
@@ -281,6 +293,11 @@ export default {
     .prev, .next{
         position: absolute;
         top: $TOUCH_TOP + $TOUCH_HEIGHT/2;
+        background-color: $BASIC_BLUE;
+        width: 22px; text-align: center;
+        height: 22px; line-height: 24px;
+        border-radius: 3px; font-size: 22px;
+        color: white;
     }
     .prev{
         left: $TOUCH_LEFT;
@@ -289,7 +306,7 @@ export default {
         right: $TOUCH_RIGHT;
     }
 
-    .order, .add{
+    .order, .add, .back{
         background-color: $BASIC_BLUE;
         width: 84px; text-align: center;
         height: 28px; line-height: 28px;
@@ -297,23 +314,31 @@ export default {
         color: white;
         position: absolute;
         right: $TOUCH_RIGHT;
-
+    }
+    .order{
+        bottom: $TOUCH_BOTTOM + 40px;
     }
     .add{
         bottom: $TOUCH_BOTTOM;
     }
-    .order{
-        bottom: $TOUCH_BOTTOM + 40px;
+    .back{
+        bottom: $TOUCH_BOTTOM;
+        left: $TOUCH_LEFT;
     }
     .orderTop, .addTop{
         left: $TOUCH_LEFT;
         transform: rotateZ(180deg);
     }
-    .addTop{
+    .backTop{
+        right: $TOUCH_RIGHT; left: auto;
         top: $TOUCH_TOP;
+        transform: rotateZ(180deg);
     }
     .orderTop{
         top: $TOUCH_TOP + 40px;
+    }
+    .addTop{
+        top: $TOUCH_TOP;
     }
 
     $imgMax: 300px;
@@ -373,6 +398,12 @@ export default {
                 display: block;
                 @include absCenter;
             }
+            .imgCover{
+                position: absolute; top: 0;
+                width: 100%; height: 100%;
+                background-image: radial-gradient(260px circle,
+                    rgba(255,255,255,0), rgba(255,255,255,1));
+            }
         }
     }
     .itemDetailTop{
@@ -398,7 +429,7 @@ export default {
     }
 }
 .fade-leave-active {
-  transition: opacity .5s
+  transition: opacity .4s
 }
 .fade-leave-to{
   opacity: 0

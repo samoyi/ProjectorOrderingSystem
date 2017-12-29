@@ -81,7 +81,7 @@ export default {
 #cart{
     width: 100%; height: 100%;
     position: absolute; top: 0;
-    // transform: rotateZ(180deg);
+
     #list{
         width: 303px; height: 360px;
         border: 5px solid $BASIC_BLUE;
@@ -98,7 +98,7 @@ export default {
             position: absolute;
             width: 244px; left: 50%; margin-left: -122px;
             top: 70px; height: 195px; overflow-y: scroll;
-            width: 100%; left: 0; margin-left: 0;
+            width: 99%; left: 0; margin-left: 0;
             #table{
                 table-layout: fixed; width: 100%;
                 .tr{
@@ -133,10 +133,10 @@ export default {
         #tableWrapper::-webkit-scrollbar {
           width: 5px;
           height: 8px;
-          background-color: red;
+          background-color: #d2eef5;
         }
         #tableWrapper::-webkit-scrollbar-thumb {
-            background: #000;
+            background: $BASIC_BLUE;
         }
         #total{
             position: absolute;
@@ -156,10 +156,10 @@ export default {
 
     }
     .order{
-        bottom: $TOUCH_BOTTOM;
+        bottom: $TOUCH_BOTTOM + 40px;
     }
     .back{
-        bottom: $TOUCH_BOTTOM + 40px;
+        bottom: $TOUCH_BOTTOM;
     }
 }
 </style>
