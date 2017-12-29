@@ -4,8 +4,11 @@
         <router-view
             :store-data="storeData"
             :cart="oCart"
+            :order-state="nOrderState"
+            :position="nPosition"
             @add="add"
-            @order="order">
+            @order="order"
+            @complete="complete">
         </router-view>
     </div>
 </template>
@@ -27,9 +30,13 @@ export default {
                 list: [],
             },
             oOrder: null,
-            bPaid: false, // 付款成功时，清空购物车；
-            bComplete: false, // 用户点击已上齐，则点餐结束，清空订单详情
-            // 付款成功后且点餐结束前，首页可以查看订单详情
+            // bPaid: false, // 付款成功时，清空购物车；
+            // bComplete: false, // 用户点击已上齐，则点餐结束，清空订单详情
+            // 付款成功后，nOrderState变为1，清空购物车，首页可以查看订单详情
+            // 用户点击已上齐，则点餐结束，清空订单详情，nOrderState变为0
+            nOrderState: 1,
+            // 在操作方向有影响的情况下，例如进入购物车。0为当前方向，1为对向
+            nPosition: 0,
         }
     },
     methods:{
@@ -57,6 +64,9 @@ export default {
                             (item.price/100)+'x'+item.amount);
                 });
             }
+        },
+        complete(){
+            this.nOrderState = 0;
         },
     },
     mounted(){

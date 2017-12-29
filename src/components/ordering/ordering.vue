@@ -29,11 +29,11 @@
         </div>
 
         <div v-show="cart.list.length" class="order"
-                @click="order">查看/下单</div>
+                @click="order(0)">查看/下单</div>
         <div v-show="selectedItem" class="add"
                 @click="add(selectedCata, selectedItem)">加入清单</div>
         <div v-show="cart.list.length" class="order orderTop"
-                @click="order">查看/下单</div>
+                @click="order(1)">查看/下单</div>
         <div v-show="selectedItem" class="add addTop"
                 @click="add(selectedCata, selectedItem)">加入清单</div>
 
@@ -184,9 +184,10 @@ export default {
             }, 500);
 
         },
-        order(){
+        order(nPosition){
             // this.$emit('order');
             this.$router.push('cart');
+            this.$parent.nPosition = nPosition;
         },
     },
     watch:{

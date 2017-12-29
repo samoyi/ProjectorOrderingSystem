@@ -1,5 +1,5 @@
 <template>
-    <div id="cart">
+    <div id="cart" :style="{transform: 'rotateZ(' + position*180 + 'deg)'}">
         <div id="list">
             <header>已选择餐品</header>
             <div id="tableWrapper">
@@ -31,7 +31,7 @@
 
 
 export default {
-    props: ["cart"],
+    props: ["cart", "position"],
     components: {
     },
     data () {
@@ -111,7 +111,8 @@ export default {
                         word-wrap: break-word;
                         word-break: break-all;
                         span{
-                            display: inline-block; width: 16px; height: 16px;
+                            display: inline-block; width: 16px;
+                            height: 16px; line-height: 16px;
                             border-radius: 50%;
                             background-color: $BASIC_BLUE;
                             color: white;
