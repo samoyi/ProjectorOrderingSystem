@@ -20,9 +20,9 @@
             </div>
             <div id="total">总计：¥{{cart.total}}</div>
         </div>
-        <div id="alipay" @click="alipay">支付宝</div>
-        <div id="wechat" @click="wechat">微信</div>
-        <div id="back" @click="back">返回</div>
+        <div id="alipay" @click="alipay" v-btnTouchAni>支付宝</div>
+        <div id="wechat" @click="wechat" v-btnTouchAni>微信</div>
+        <div id="back" @click="back" v-btnTouchAni>返回</div>
     </div>
 </template>
 

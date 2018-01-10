@@ -12,7 +12,7 @@
                     扫二维码完成支付
                 </p>
             </div>
-            <div id="back" @click="back">返回</div>
+            <div id="back" @click="back" v-btnTouchAni>返回</div>
         </div>
         <div id="paySuccess" :style="{transform: 'rotateZ(' + position*180 + 'deg)'}"
                 v-if="paySuccess">
@@ -22,7 +22,7 @@
                     您的餐品正在准备中，请稍候
                 </p>
             </div>
-            <div id="backToMain" @click="backToMain">返回桌面</div>
+            <div id="backToMain" @click="backToMain" v-btnTouchAni>返回桌面</div>
         </div>
     </div>
 </template>

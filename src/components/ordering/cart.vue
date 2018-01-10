@@ -22,8 +22,8 @@
             </div>
             <div id="total">总计：¥{{total}}</div>
         </div>
-        <div class="back" @click="back">返回</div>
-        <div class="order" v-show="total>0" @click="order">下单</div>
+        <div class="back" @click="back" v-btnTouchAni>返回</div>
+        <div class="order" v-show="total>0" @click="order" v-btnTouchAni>下单</div>
     </div>
 </template>
 

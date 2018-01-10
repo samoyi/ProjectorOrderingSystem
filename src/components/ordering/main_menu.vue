@@ -9,9 +9,9 @@
             @dial-enter="routes">
         </dial-component>
         <div class="order top-order" v-if="orderState" v-show="!bDisplayOrder"
-                @click="showOrder(1)">查看订单</div>
+                @click="showOrder(1)" v-btnTouchAni>查看订单</div>
         <div class="order bottom-order" v-if="orderState" v-show="!bDisplayOrder"
-                @click="showOrder(0)">查看订单</div>
+                @click="showOrder(0)" v-btnTouchAni>查看订单</div>
         <!-- <div id="order-list" v-show="bDisplayOrder"
                  :style="{transform: 'rotateZ(' + position*180 + 'deg)'}">
             <div @click="complete">已上齐</div>

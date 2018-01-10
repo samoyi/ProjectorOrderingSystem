@@ -26,8 +26,22 @@ const router = new VueRouter({
 });
 
 
+// 按钮点击时的动画
+Vue.directive('btnTouchAni', {
+    inserted: btn=>{
+        btn.addEventListener('touchstart', ()=>{
+            btn.style.transform = 'scale3d(0.9, 0.9, 0.9)';
+        });
+        btn.addEventListener('touchend', ()=>{
+            btn.style.transform = 'scale3d(1, 1, 1)';
+        });
+    },
+});
+
+
+
 new Vue({
     el: '#app',
     router,
     render: h => h(App)
-})
+});

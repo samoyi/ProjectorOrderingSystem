@@ -28,17 +28,17 @@
             ▶
         </div>
 
-        <div v-show="cart.list.length" class="order"
+        <div v-show="cart.list.length" class="order" v-btnTouchAni
                 @click="order(0)">查看/下单</div>
-        <div v-show="selectedItem" class="add"
+        <div v-show="selectedItem" class="add" v-btnTouchAni
                 @click="add(selectedCata, selectedItem)">加入清单</div>
-        <div class="back"
+        <div class="back" v-btnTouchAni
                 @click="back">返回</div>
-        <div v-show="cart.list.length" class="order orderTop"
+        <div v-show="cart.list.length" class="order orderTop" v-btnTouchAni
                 @click="order(1)">查看/下单</div>
-        <div v-show="selectedItem" class="add addTop"
+        <div v-show="selectedItem" class="add addTop" v-btnTouchAni
                 @click="add(selectedCata, selectedItem)">加入清单</div>
-        <div class="back backTop"
+        <div class="back backTop" v-btnTouchAni
                 @click="back">返回</div>
 
         <div v-if="selectedItem" class="itemDetail">
@@ -283,7 +283,16 @@ export default {
             }
         }
         .selected{
-            border: 5px solid $BASIC_BLUE;
+            border: 5px solid rgba(130, 209, 226, 0);
+            animation: select 0.4s forwards;
+        }
+        @keyframes select{
+            0%{
+                border-color: rgba(130, 209, 226, 0);
+            }
+            100%{
+                border-color: rgba(130, 209, 226, 1);
+            }
         }
     }
     #dial{
@@ -384,6 +393,32 @@ export default {
                 padding-left: 4em;
                 span:first-child{
                     margin-left: -4em;
+                }
+            }
+            .textAniL{
+                animation: textSlideInL 0.8s;
+            }
+            .textAniR{
+                animation: textSlideInR 0.8s;
+            }
+            @keyframes textSlideInL{
+                0%{
+                    transform: translateX(-40px);
+                    opacity: 0;
+                }
+                100%{
+                    transform: translateX(0px);
+                    opacity: 1;
+                }
+            }
+            @keyframes textSlideInR{
+                0%{
+                    transform: translateX(40px);
+                    opacity: 0;
+                }
+                100%{
+                    transform: translateX(0px);
+                    opacity: 1;
                 }
             }
         }

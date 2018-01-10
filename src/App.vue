@@ -1,6 +1,9 @@
 <template>
-    <div id="app">
-        <div id="touchArea"></div>
+    <div id="app" @click="touchFd">
+        <!-- <div id="touchArea">
+
+        </div> -->
+        <div id="touchFb" :style="touchFdStyle"></div>
         <router-view
             :store-data="storeData"
             :cart="oCart"
@@ -45,6 +48,8 @@ export default {
             nOrderState: 0,
             // 在操作方向有影响的情况下，例如进入购物车。0为当前方向，1为对向
             nPosition: 0,
+
+            touchFdStyle: {},
         }
     },
     methods:{
@@ -98,6 +103,19 @@ export default {
                 total: 0,
             };
         },
+        touchFd(ev){
+            this.touchFdStyle = {
+                left: ev.clientX-5 + 'px',
+                top: ev.clientY-5 + 'px',
+                animation: 'touchFb .4s',
+            };
+            setTimeout(()=>{
+                this.touchFdStyle = {
+                    left: '0px',
+                    top: '0px',
+                };
+            }, 400);
+        },
     },
     mounted(){
         ajax.ajax_get('./server-side/merchants/testMerchant/testStore/config.json', res=>{
@@ -115,14 +133,28 @@ export default {
 @import "./scss/common.scss";
 
 #app{
-    #touchArea{
-        width: $TOUCH_WIDTH;
-        height: $TOUCH_HEIGHT;
-        position: relative;
-        top: $TOUCH_TOP;
-        left: $TOUCH_LEFT;
-        background: gray;
+    #touchFb{
+        background-color: gray;
+        border-radius: 100%;
+        width: 20px; height: 20px;
+        position: absolute;
         opacity: 0;
     }
+    @keyframes touchFb{
+        0%{opacity: 0; transform: scale3d(0, 0, 0);}
+        30%{opacity: 0.3; transform: scale3d(0.5, 0.5, 0.5);}
+        100%{opacity: 0; transform: scale3d(1, 1, 1);}
+    }
+    // #touchArea{
+    //     width: $TOUCH_WIDTH;
+    //     height: $TOUCH_HEIGHT;
+    //     position: relative;
+    //     top: $TOUCH_TOP;
+    //     left: $TOUCH_LEFT;
+    //     background: gray;
+    //     opacity: 0;
+    //
+    //
+    // }
 }
 </style>
