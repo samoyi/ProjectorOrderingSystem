@@ -128,8 +128,11 @@ export default {
             },
             nMenuAngle: 0, // 菜单转盘的角度。用来确定那些项目要上下颠倒
             nEndAngle: 0, // 手动旋转结束后的角度。自动旋转会不断更新该值
+            bRotating: false, // 商品是否在自动旋转，如果是就不在重复添加旋转
 
             bAddTextAni: false,
+
+
         }
     },
     components: {
@@ -142,9 +145,12 @@ export default {
             this.selectedIndex = -1;
 console.time('update');
             // 商品入场动画结束删除其动画样式，不影响后续的拨动
+            //
             this.$nextTick(()=>{
                 console.time('tick');
                 oList = document.querySelector('#list');
+                oList.style.animation = 'listAni 2s forwards ease-out';
+
                 oList.addEventListener('animationend',
                         (ev)=>{ev.currentTarget.style.animationName = 'none';});
                 // let nRotateDeg = 0,
@@ -291,7 +297,10 @@ console.timeEnd('tick');
 
                 document.querySelector('#list').addEventListener('animationend',
                         ()=>{
-                    this.playListAni();
+                    if(!this.bRotating){
+                        this.bRotating = true;
+                        this.playListAni();
+                    }
                 });
             });
 
@@ -336,7 +345,7 @@ console.timeEnd('tick');
     position: absolute; top: 0; left: 0;
     #list{
         width: 300px; height: 300px;
-        animation: listAni 2s forwards ease-out;
+        // animation: listAni 2s forwards ease-out;
         @include absCenter;
         li{
             position: absolute;
