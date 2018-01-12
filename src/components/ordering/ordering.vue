@@ -18,12 +18,14 @@
         </dial-component>
         <div class="prev" v-show="pageSwitcher.oDisplayPageTip[selectedCata]
                     && (pageSwitcher.oPageIndex[selectedCata]!==0)"
+                 v-btnTouchAni
                 @click="prevPage">
             ◀
         </div>
         <div class="next" v-show="pageSwitcher.oDisplayPageTip[selectedCata]
                     && (pageSwitcher.oPageIndex[selectedCata]
                         !==pageSwitcher.oPageAmount[selectedCata]-1)"
+                 v-btnTouchAni
                 @click="nextPage">
             ▶
         </div>
@@ -43,48 +45,48 @@
 
         <div v-if="selectedItem" class="itemDetail">
             <div class="info">
-                <p>
+                <p :class="{textAni: bAddTextAni}">
                     <span>商品名：</span>
                     <span>{{selectedItem.name}}</span>
                 </p>
-                <p>
+                <p :class="{textAni: bAddTextAni}">
                     <span>主口味：</span>
                     <span>{{selectedItem.flavor}}</span>
                 </p>
-                <p>
+                <p :class="{textAni: bAddTextAni}">
                     <span>主要原料：</span>
                     <span>{{selectedItem.material}}</span>
                 </p>
-                <p>
+                <p :class="{textAni: bAddTextAni}">
                     <span>推荐度：</span>
                     <span>{{selectedItem.recommendation}}</span>
                 </p>
             </div>
-            <div class="imgFrame">
+            <div class="imgFrame" :class="{imgAni: bAddTextAni}">
                 <img :src="selectedItem.img" />
                 <div class="imgCover"></div>
             </div>
         </div>
         <div v-if="selectedItem" class="itemDetail itemDetailTop">
             <div class="info">
-                <p>
+                <p :class="{textAni: bAddTextAni}">
                     <span>商品名：</span>
                     <span>{{selectedItem.name}}</span>
                 </p>
-                <p>
+                <p :class="{textAni: bAddTextAni}">
                     <span>主口味：</span>
                     <span>{{selectedItem.flavor}}</span>
                 </p>
-                <p>
+                <p :class="{textAni: bAddTextAni}">
                     <span>主要原料：</span>
                     <span>{{selectedItem.material}}</span>
                 </p>
-                <p>
+                <p :class="{textAni: bAddTextAni}">
                     <span>推荐度：</span>
                     <span>{{selectedItem.recommendation}}</span>
                 </p>
             </div>
-            <div class="imgFrame">
+            <div class="imgFrame" :class="{imgAni: bAddTextAni}">
                 <img :src="selectedItem.img" />
                 <div class="imgCover"></div>
             </div>
@@ -106,6 +108,9 @@ import MyUtil from '../../js/MyUtil';
 import DialRotation from '../../js/DialRotation';
 
 
+let listAniReq = null; // 自动旋转的 requestAnimationFrame
+let oList = null; // 菜单节点
+
 export default {
     props: ["storeData", "cart"],
     data () {
@@ -113,7 +118,7 @@ export default {
             dialDiameter: styleConfig.ORDERING_DIAL_DIAMETER,
             selectedCata: '',
             selectedItem: '',
-            selectedIndex: null,
+            selectedIndex: -1,
             tipIn: false, // 添加提醒是否出现
             pageSwitcher: {
                 oDisplayPageTip: {}, // 每个分类是否显示上下页按钮
@@ -122,6 +127,9 @@ export default {
                 oPageAmount: {}, // 所有分类的总页码
             },
             nMenuAngle: 0, // 菜单转盘的角度。用来确定那些项目要上下颠倒
+            nEndAngle: 0, // 手动旋转结束后的角度。自动旋转会不断更新该值
+
+            bAddTextAni: false,
         }
     },
     components: {
@@ -130,6 +138,27 @@ export default {
     methods: {
         selectCata(sCata){
             this.selectedCata = sCata;
+            this.selectedItem = false;
+            this.selectedIndex = -1;
+console.time('update');
+            // 商品入场动画结束删除其动画样式，不影响后续的拨动
+            this.$nextTick(()=>{
+                console.time('tick');
+                oList = document.querySelector('#list');
+                oList.addEventListener('animationend',
+                        (ev)=>{ev.currentTarget.style.animationName = 'none';});
+                // let nRotateDeg = 0,
+                //     nScale = 0,
+                //     oList = document.querySelector('#list');
+                // function listAni(){
+                //     nScale += 0.01;
+                //     if(nScale>1)nScale=1;
+                //     oList.style.transform = 'rotateZ(' + nRotateDeg++ + 'deg)'
+                //                 + 'scale3d(' +nScale+', ' +nScale+ ', ' +nScale+ ')';
+                //     window.requestAnimationFrame(listAni);
+                // }
+                // window.requestAnimationFrame(listAni);
+            });
         },
         prevPage(){
             this.pageSwitcher.oPageIndex[this.selectedCata]--;
@@ -178,6 +207,16 @@ export default {
         itemDetail(item, index){
             this.selectedItem = item;
             this.selectedIndex = index;
+
+            // TODO: TextAni
+            // 下面是每次点击一个商品时介绍文字的进场动画
+            // 每次点击是先移除动画类然后再开始，这样在快速切换商品时也可以快速的显示动画
+            // 但是这里的间隔不能太小（个位数的样子），太小的话快速切换到第二个商品时就不
+            // 能再次执行动画
+            this.bAddTextAni = false;
+            setTimeout(()=>{
+                this.bAddTextAni = true;
+            }, 50);
         },
 
         add(sCata, oItem){
@@ -196,14 +235,26 @@ export default {
         back(){
             this.$router.go(-1);
         },
+
+        playListAni(){
+            this.$nextTick(()=>{
+                let listAni = ()=>{
+                    this.nEndAngle += 0.1;
+                    this.nMenuAngle = this.nEndAngle;
+                    oList.style.transform = 'rotateZ('
+                            +this.nEndAngle+ 'deg)';
+                    listAniReq = window.requestAnimationFrame(listAni);
+                }
+                listAniReq = window.requestAnimationFrame(listAni);
+            });
+        },
     },
     watch:{
         selectedCata(){
             // 大菜单转动
+console.timeEnd('update');
             this.$nextTick(()=>{
-                let oList = document.querySelector('#list'),
-                    nEndAngle = 0;
-
+console.timeEnd('tick');
                 const nListRadius = styleConfig.ORDERING_LIST_DIAMETER/2;
                 const dialRotation = new DialRotation.Rotation(
                             styleConfig.SCREEN_WIDTH/2
@@ -212,7 +263,9 @@ export default {
                             ,this.nMenuAngle);
                 // 因为不同类别的餐品使用的统一转盘
                 // 不要每次切换类别都初始化一个转动对象
+
                 oList.addEventListener('touchstart', (ev)=>{
+                    window.cancelAnimationFrame(listAniReq); // 停止自动旋转
 
                     this.bTransition = false;
                     dialRotation.start(ev.touches[0].clientX,
@@ -227,13 +280,18 @@ export default {
                         setTimeout(function(){
                             dialRotation.throttling = false;
                         }, 50);
-                        nEndAngle = dialRotation.curDeg(
+                        this.nEndAngle = dialRotation.curDeg(
                                         ev.changedTouches[0].clientX,
                                         ev.changedTouches[0].clientY);
                         oList.style.transform = 'rotateZ('
-                            +nEndAngle+ 'deg)';
-                        this.nMenuAngle = nEndAngle;
+                            +this.nEndAngle+ 'deg)';
+                        this.nMenuAngle = this.nEndAngle;
                     }
+                });
+
+                document.querySelector('#list').addEventListener('animationend',
+                        ()=>{
+                    this.playListAni();
                 });
             });
 
@@ -247,6 +305,7 @@ export default {
         },
     },
     mounted(){
+
         // 初始化pageSwitcher
         let oMenu = this.storeData.menu;
         for(let cata in oMenu){
@@ -258,6 +317,13 @@ export default {
             this.$set(this.pageSwitcher.oPageAmount, cata, Math.ceil(oMenu[cata].length / 10));
             this.$set(this.pageSwitcher.oPageIndex, cata, 0);
         }
+
+        // 自动旋转动画接收后删除其样式，不影响组件内部的拨动动画
+        document.querySelector('#dial').addEventListener('animationend', (ev)=>{
+            ev.currentTarget.style.transform = 'rotateZ(0deg)';
+            ev.currentTarget.style.animationName = 'none';
+        });
+
     },
 }
 </script>
@@ -270,6 +336,7 @@ export default {
     position: absolute; top: 0; left: 0;
     #list{
         width: 300px; height: 300px;
+        animation: listAni 2s forwards ease-out;
         @include absCenter;
         li{
             position: absolute;
@@ -295,8 +362,25 @@ export default {
             }
         }
     }
+    @keyframes listAni{
+        0%{
+            transform: scale3d(0, 0, 0) rotate(-360deg);
+            opacity: 0;
+        }
+        100%{
+            transform: scale3d(1, 1, 1) rotate(0deg);
+            opacity: 1;
+        }
+    }
     #dial{
         width: 142px; height: 142px;
+        transform: rotateZ(-1440deg);
+        animation: dialAni 2s forwards;
+        animation-timing-function:cubic-bezier(0.080, 0.670, 0.665, 0.985);
+    }
+    @keyframes dialAni{
+        0%{transform: rotateZ(-1440deg);}
+        100%{transform: rotateZ(0);}
     }
 
     .prev, .next{
@@ -364,6 +448,7 @@ export default {
                 margin-bottom: 16px;
                 line-height: 22px;
                 text-align: left;
+                opacity: 0;
                 span:first-child{
                     color: $BASIC_BLUE;
                 }
@@ -373,47 +458,38 @@ export default {
             }
             p:nth-child(1){
                 padding-left: 4em;
+                animation-delay: 0s;
                 span:first-child{
                     margin-left: -4em;
                 }
             }
             p:nth-child(2){
                 padding-left: 4em;
+                animation-delay: 0.2s;
                 span:first-child{
                     margin-left: -4em;
                 }
             }
             p:nth-child(3){
                 padding-left: 5em;
+                animation-delay: 0.4s;
                 span:first-child{
                     margin-left: -5em;
                 }
             }
             p:nth-child(4){
                 padding-left: 4em;
+                animation-delay: 0.6s;
                 span:first-child{
                     margin-left: -4em;
                 }
             }
-            .textAniL{
-                animation: textSlideInL 0.8s;
+            .textAni{
+                animation: textSlideIn 0.8s forwards;
             }
-            .textAniR{
-                animation: textSlideInR 0.8s;
-            }
-            @keyframes textSlideInL{
+            @keyframes textSlideIn{
                 0%{
-                    transform: translateX(-40px);
-                    opacity: 0;
-                }
-                100%{
-                    transform: translateX(0px);
-                    opacity: 1;
-                }
-            }
-            @keyframes textSlideInR{
-                0%{
-                    transform: translateX(40px);
+                    transform: translateX(-80px);
                     opacity: 0;
                 }
                 100%{
@@ -427,6 +503,7 @@ export default {
             height: 100%;
             position: absolute;
             bottom: 0; right: 0;
+            opacity: 0;
             img{
                 max-width: $imgMax;
                 max-height: $imgMax;
@@ -440,6 +517,19 @@ export default {
                     rgba(255,255,255,0), rgba(255,255,255,1));
             }
         }
+        .imgAni{
+            animation: imgFadeIn 0.8s forwards;
+        }
+        @keyframes imgFadeIn{
+            0%{
+                opacity: 0;
+                transform: translateX(80px);
+            }
+            100%{
+                opacity: 1;
+                transform: translateX(0px);
+            }
+        }
     }
     .itemDetailTop{
         transform: rotateZ(180deg); top: 0;
@@ -447,20 +537,21 @@ export default {
 }
 
 #tip{
-    color: $BASIC_BLUE; background-color: rgba(0, 0, 0, 0.5);
-    @include absCenter;
-    width: 100%; height: 100%; text-align: center;
+    color: $BASIC_BLUE; background-color: rgba(255, 255, 255, 0.9);
+    @include absCenter; text-align: center;
+    width: 300px; height: 360px;
+    box-sizing: border-box; border: 5px solid $BASIC_BLUE;
     font-size: 18px;
     p{
         position: absolute;
         width: 100%;
     }
     p:first-child{
-        top: $SCREEN_HEIGHT - $TOUCH_BOTTOM + 8px;
+        top: 48px;
+        transform: rotateZ(180deg);
     }
     p:last-child{
-        bottom: $SCREEN_HEIGHT - $TOUCH_TOP + 8px;
-        transform: rotateZ(180deg);
+        bottom: 48px;
     }
 }
 .fade-leave-active {
