@@ -46,20 +46,28 @@
         <div v-if="selectedItem" class="itemDetail">
             <div class="info">
                 <p :class="{textAni: bAddTextAni}">
-                    <span>商品名：</span>
                     <span>{{selectedItem.name}}</span>
                 </p>
-                <p :class="{textAni: bAddTextAni}">
-                    <span>主口味：</span>
-                    <span>{{selectedItem.flavor}}</span>
+                <p v-if="selectedItem.des1" :class="{textAni: bAddTextAni}">
+                    <span>{{selectedItem.des1[0]}}：</span>
+                    <span>{{selectedItem.des1[1]}}</span>
                 </p>
-                <p :class="{textAni: bAddTextAni}">
-                    <span>主要原料：</span>
-                    <span>{{selectedItem.material}}</span>
+                <p v-if="selectedItem.des2" :class="{textAni: bAddTextAni}">
+                    <span>{{selectedItem.des2[0]}}：</span>
+                    <span>{{selectedItem.des2[1]}}</span>
+                </p>
+                <p v-if="selectedItem.des3" :class="{textAni: bAddTextAni}">
+                    <span>{{selectedItem.des3[0]}}：</span>
+                    <span>{{selectedItem.des3[1]}}</span>
                 </p>
                 <p :class="{textAni: bAddTextAni}">
                     <span>推荐度：</span>
                     <span>{{selectedItem.recommendation}}</span>
+                </p>
+                <p :class="{textAni: bAddTextAni}">
+                    <span>价格：</span>
+                    <span v-if="selectedItem.price">{{selectedItem.price/100}}元</span>
+                    <span v-if="selectedItem.dimension"> {{selectedItem.dimension}}</span>
                 </p>
             </div>
             <div class="imgFrame" :class="{imgAni: bAddTextAni}">
@@ -70,20 +78,28 @@
         <div v-if="selectedItem" class="itemDetail itemDetailTop">
             <div class="info">
                 <p :class="{textAni: bAddTextAni}">
-                    <span>商品名：</span>
                     <span>{{selectedItem.name}}</span>
                 </p>
-                <p :class="{textAni: bAddTextAni}">
-                    <span>主口味：</span>
-                    <span>{{selectedItem.flavor}}</span>
+                <p v-if="selectedItem.des1" :class="{textAni: bAddTextAni}">
+                    <span>{{selectedItem.des1[0]}}：</span>
+                    <span>{{selectedItem.des1[0]}}</span>
                 </p>
-                <p :class="{textAni: bAddTextAni}">
-                    <span>主要原料：</span>
-                    <span>{{selectedItem.material}}</span>
+                <p v-if="selectedItem.des2" :class="{textAni: bAddTextAni}">
+                    <span>{{selectedItem.des2[0]}}：</span>
+                    <span>{{selectedItem.des2[0]}}</span>
+                </p>
+                <p v-if="selectedItem.des3" :class="{textAni: bAddTextAni}">
+                    <span>{{selectedItem.des3[0]}}：</span>
+                    <span>{{selectedItem.des3[0]}}</span>
                 </p>
                 <p :class="{textAni: bAddTextAni}">
                     <span>推荐度：</span>
                     <span>{{selectedItem.recommendation}}</span>
+                </p>
+                <p :class="{textAni: bAddTextAni}">
+                    <span>价格：</span>
+                    <span v-if="selectedItem.price">{{selectedItem.price/100}}元</span>
+                    <span v-if="selectedItem.dimension"> {{selectedItem.dimension}}</span>
                 </p>
             </div>
             <div class="imgFrame" :class="{imgAni: bAddTextAni}">
@@ -230,7 +246,7 @@ console.time('update');
             this.tipIn = true;
             setTimeout(()=>{
                 this.tipIn = false;
-            }, 500);
+            }, 1000);
 
         },
         order(nPosition){
@@ -458,41 +474,27 @@ console.timeEnd('tick');
                 line-height: 22px;
                 text-align: left;
                 opacity: 0;
+                span{
+                    color: #a3a3a3;
+                }
                 span:first-child{
                     color: $BASIC_BLUE;
                 }
-                span:last-child{
-                    color: #a3a3a3;
-                }
             }
-            p:nth-child(1){
-                padding-left: 4em;
-                animation-delay: 0s;
-                span:first-child{
-                    margin-left: -4em;
-                }
+            p:first-child{
+                font-size: 28px;
+                margin-top: 16px;
             }
-            p:nth-child(2){
-                padding-left: 4em;
-                animation-delay: 0.2s;
-                span:first-child{
-                    margin-left: -4em;
-                }
-            }
-            p:nth-child(3){
-                padding-left: 5em;
-                animation-delay: 0.4s;
-                span:first-child{
-                    margin-left: -5em;
-                }
-            }
-            p:nth-child(4){
-                padding-left: 4em;
-                animation-delay: 0.6s;
-                span:first-child{
-                    margin-left: -4em;
-                }
-            }
+             // 包含产品名在内最多支持6项
+            @for $i from 1 to 7
+            {
+                p:nth-child(#{$i}){
+                    padding-left: 4em;
+                    animation-delay: #{$i*0.2}s;
+                    span:first-child{
+                        margin-left: -4em;
+                    }
+                }} // TODO scssFor. 最后这个大括号为什么不能换行
             .textAni{
                 animation: textSlideIn 0.8s forwards;
             }

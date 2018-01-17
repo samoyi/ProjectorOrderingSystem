@@ -40,8 +40,9 @@
             <!-- icon-wrapper初始位置都在贴下居中，根据需要旋转 -->
             <div class="icon-wrapper" v-for="(cata,index) in items"
                      :style="iconWrapperStyle(items.length, index)">
-                <img v-if="cata" :src="iconDir + cata + '.' + iconType"
-                        :style="{bottom: 2000/110+'%'}" @click="enter(cata)" />
+                <img v-if="cata" :src="imgSrc(cata, index)"
+                        :style="{bottom: 2000/110+'%'}"
+                        @click="enter(cata, index)" />
             </div>
         </div>
     </div>
@@ -61,6 +62,7 @@ export default {
     data () {
         return {
             bTransition: true,
+            nSelected: -1,
         }
     },
     computed:{
@@ -94,6 +96,13 @@ export default {
 
     },
     methods: {
+        imgSrc(cata, index){
+            let sPostfix = '';
+            if(this.nSelected===index){
+                sPostfix = '_selected';
+            }
+            return this.iconDir + cata + sPostfix + '.' + this.iconType;
+        },
         dividerWidth(){
             return Math.ceil(this.diameter/100);
         },
@@ -105,7 +114,11 @@ export default {
 
             let oStyle = {
                 width: this.diameter*(100/220) + 'px',
+                // width: this.diameter + 'px',
                 height: this.diameter/2 + 'px',
+                // backgroundColor: index===this.nSelected ?
+                //                     styleConfig.BASIC_BLUE : 'transparent',
+                // borderRadius:'0 0 '+ this.diameter +'px '+ this.diameter +'px',
             };
 
             if(count===2){
@@ -136,7 +149,8 @@ export default {
             }
             return oStyle;
         },
-        enter(sCata){
+        enter(sCata, index){
+            this.nSelected = index;
             this.$emit('dial-enter', sCata);
         },
     },

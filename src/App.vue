@@ -26,6 +26,7 @@ export default {
     name: 'app',
     data () {
         return {
+            oClientConfig: [],
             storeData: {
                 primaryCatas: [],
                 menu: {},
@@ -118,15 +119,40 @@ export default {
         },
     },
     mounted(){
-        ajax.ajax_get('./server-side/merchants/testMerchant/testStore/config.json', res=>{
+        // 根据网址中的参数确定当前具体的客户端
+        let aClientConfig = location.search.slice(1).split('&');
+        if(aClientConfig.length !== 3){
+            alert('网址错误');
+            throw new Error('网址错误');
+        }
+        let oClientConfig = {},
+            aPair = [];
+        aClientConfig.forEach(query=>{
+            aPair = query.split('=');
+            if(aPair[1]){
+                oClientConfig[aPair[0]] = aPair[1];
+            }
+            else{
+                alert('网址错误');
+                throw new Error('网址错误');
+            }
+        });
+        this.oClientConfig = oClientConfig;
+
+// 测试url http://localhost:8080/?merchant=testMerchant&store=37ac5ae2d57709540b27e1ff7f39e2fec903bba9af21ad241309c966e57fb8e7&table=1#/main_menu
+        let url = './server-side/merchants/' + oClientConfig.merchant
+                        + '/' + oClientConfig.store + '/items.json';
+        ajax.ajax_get(url, res=>{
             let oConfig = JSON.parse(res);
             this.storeData.primaryCatas = oConfig.primaryCatas;
             this.storeData.menu = oConfig.menu;
         }, err=>{
             alert('读取店铺配置失败：' + err);
+            throw new Error('读取店铺配置失败：' + err);
         });
     },
 }
+
 </script>
 
 <style lang="scss">

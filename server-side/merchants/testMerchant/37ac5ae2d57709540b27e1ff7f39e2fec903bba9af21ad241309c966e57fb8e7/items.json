@@ -1,0 +1,207 @@
+{
+    "primaryCatas": ["ordering", "game", "ordering", "game"],
+    "menu": {
+        "cake": [
+            {
+                "name": "cake1",
+                "img": "./server-side/merchants/testMerchant/37ac5ae2d57709540b27e1ff7f39e2fec903bba9af21ad241309c966e57fb8e7/images/cake/1.png",
+                "des1": ["标题1", "描述1"],
+                "des2": ["标题2","描述2"],
+                "des3": ["标题3", "描述3"],
+                "recommendation": "4",
+                "price": 1000,
+                "dimension": "/个",
+                "id": "1"
+            },
+            {
+                "name": "cake2",
+                "img": "./server-side/merchants/testMerchant/37ac5ae2d57709540b27e1ff7f39e2fec903bba9af21ad241309c966e57fb8e7/images/cake/2.png",
+                "des1": null,
+                "des2": ["标题2","描述2"],
+                "des3": ["标题3", "描述3"],
+                "recommendation": "5",
+                "price": 1000,
+                "dimension": "/个",
+                "id": "2"
+            },
+            {
+                "name": "cake3",
+                "img": "./server-side/merchants/testMerchant/37ac5ae2d57709540b27e1ff7f39e2fec903bba9af21ad241309c966e57fb8e7/images/cake/3.png",
+                "des1": ["标题1", "描述1"],
+                "des2": ["标题2","描述2"],
+                "des3": ["标题3", "描述3"],
+                "recommendation": "4",
+                "price": 1000,
+                "dimension": "/个",
+                "id": "3"
+            },
+            {
+                "name": "cake4",
+                "img": "./server-side/merchants/testMerchant/37ac5ae2d57709540b27e1ff7f39e2fec903bba9af21ad241309c966e57fb8e7/images/cake/4.png",
+                "des1": ["标题1", "描述1"],
+                "des2": ["标题2","描述2"],
+                "des3": ["标题3", "描述3"],
+                "recommendation": "4.5",
+                "price": 1000,
+                "dimension": "/个",
+                "id": "4"
+            },
+            {
+                "name": "cake5",
+                "img": "./server-side/merchants/testMerchant/37ac5ae2d57709540b27e1ff7f39e2fec903bba9af21ad241309c966e57fb8e7/images/cake/5.png",
+                "des1": ["标题1", "描述1"],
+                "des2": ["标题2","描述2"],
+                "des3": ["标题3", "描述3"],
+                "recommendation": "5",
+                "price": 1000,
+                "dimension": "/个",
+                "id": "5"
+            },
+            {
+                "name": "cake6",
+                "img": "./server-side/merchants/testMerchant/37ac5ae2d57709540b27e1ff7f39e2fec903bba9af21ad241309c966e57fb8e7/images/cake/6.png",
+                "des1": ["标题1", "描述1"],
+                "des2": ["标题2","描述2"],
+                "des3": ["标题3", "描述3"],
+                "recommendation": "4",
+                "price": 1000,
+                "dimension": "/个",
+                "id": "6"
+            },
+            {
+                "name": "cake7",
+                "img": "./server-side/merchants/testMerchant/37ac5ae2d57709540b27e1ff7f39e2fec903bba9af21ad241309c966e57fb8e7/images/cake/7.png",
+                "des1": ["标题1", "描述1"],
+                "des2": ["标题2","描述2"],
+                "des3": ["标题3", "描述3"],
+                "recommendation": "4",
+                "price": 1000,
+                "dimension": "/个",
+                "id": "7"
+            },
+            {
+                "name": "cake8",
+                "img": "./server-side/merchants/testMerchant/37ac5ae2d57709540b27e1ff7f39e2fec903bba9af21ad241309c966e57fb8e7/images/cake/8.png",
+                "des1": ["标题1", "描述1"],
+                "des2": ["标题2","描述2"],
+                "des3": ["标题3", "描述3"],
+                "recommendation": "5",
+                "price": 1000,
+                "dimension": "/个",
+                "id": "8"
+            },
+            {
+                "name": "cake9",
+                "img": "./server-side/merchants/testMerchant/37ac5ae2d57709540b27e1ff7f39e2fec903bba9af21ad241309c966e57fb8e7/images/cake/9.png",
+                "des1": ["标题1", "描述1"],
+                "des2": ["标题2","描述2"],
+                "des3": ["标题3", "描述3"],
+                "recommendation": "4",
+                "price": 1000,
+                "dimension": "/个",
+                "id": "9"
+            },
+            {
+                "name": "cake10",
+                "img": "./server-side/merchants/testMerchant/37ac5ae2d57709540b27e1ff7f39e2fec903bba9af21ad241309c966e57fb8e7/images/cake/10.png",
+                "des1": ["标题1", "描述1"],
+                "des2": ["标题2","描述2"],
+                "des3": ["标题3", "描述3"],
+                "recommendation": "4.5",
+                "price": 1000,
+                "dimension": "/个",
+                "id": "10"
+            },
+            {
+                "name": "cake11",
+                "img": "./server-side/merchants/testMerchant/37ac5ae2d57709540b27e1ff7f39e2fec903bba9af21ad241309c966e57fb8e7/images/cake/11.png",
+                "des1": ["标题1", "描述1"],
+                "des2": ["标题2","描述2"],
+                "des3": ["标题3", "描述3"],
+                "recommendation": "4",
+                "price": 1000,
+                "dimension": "/个",
+                "id": "11"
+            },
+            {
+                "name": "cake12",
+                "img": "./server-side/merchants/testMerchant/37ac5ae2d57709540b27e1ff7f39e2fec903bba9af21ad241309c966e57fb8e7/images/cake/12.png",
+                "des1": ["标题1", "描述1"],
+                "des2": ["标题2","描述2"],
+                "des3": ["标题3", "描述3"],
+                "recommendation": "4",
+                "price": 1000,
+                "dimension": "/个",
+                "id": "12"
+            },
+            {
+                "name": "cake13",
+                "img": "./server-side/merchants/testMerchant/37ac5ae2d57709540b27e1ff7f39e2fec903bba9af21ad241309c966e57fb8e7/images/cake/13.png",
+                "des1": ["标题1", "描述1"],
+                "des2": ["标题2","描述2"],
+                "des3": ["标题3", "描述3"],
+                "recommendation": "4",
+                "price": 1000,
+                "dimension": "/个",
+                "id": "13"
+            },
+            {
+                "name": "cake14",
+                "img": "./server-side/merchants/testMerchant/37ac5ae2d57709540b27e1ff7f39e2fec903bba9af21ad241309c966e57fb8e7/images/cake/14.png",
+                "des1": ["标题1", "描述1"],
+                "des2": ["标题2","描述2"],
+                "des3": ["标题3", "描述3"],
+                "recommendation": "4.5",
+                "price": 1000,
+                "dimension": "/个",
+                "id": "14"
+            },
+            {
+                "name": "cake15",
+                "img": "./server-side/merchants/testMerchant/37ac5ae2d57709540b27e1ff7f39e2fec903bba9af21ad241309c966e57fb8e7/images/cake/15.png",
+                "des1": ["标题1", "描述1"],
+                "des2": ["标题2","描述2"],
+                "des3": ["标题3", "描述3"],
+                "recommendation": "5",
+                "price": 1000,
+                "dimension": "/个",
+                "id": "15"
+            }
+        ],
+        "drink": [
+            {
+                "name": "drink1",
+                "img": "./server-side/merchants/testMerchant/37ac5ae2d57709540b27e1ff7f39e2fec903bba9af21ad241309c966e57fb8e7/images/drink/1.png",
+                "des1": ["标题1", "描述1"],
+                "des2": ["标题2","描述2"],
+                "des3": ["标题3", "描述3"],
+                "recommendation": "4",
+                "price": 1000,
+                "dimension": "/个",
+                "id": "16"
+            },
+            {
+                "name": "drink2",
+                "img": "./server-side/merchants/testMerchant/37ac5ae2d57709540b27e1ff7f39e2fec903bba9af21ad241309c966e57fb8e7/images/drink/2.png",
+                "des1": ["标题1", "描述1"],
+                "des2": ["标题2","描述2"],
+                "des3": ["标题3", "描述3"],
+                "recommendation": "5",
+                "price": 1000,
+                "dimension": "/个",
+                "id": "17"
+            },
+            {
+                "name": "drink3",
+                "img": "./server-side/merchants/testMerchant/37ac5ae2d57709540b27e1ff7f39e2fec903bba9af21ad241309c966e57fb8e7/images/drink/3.png",
+                "des1": ["标题1", "描述1"],
+                "des2": ["标题2", "描述2"],
+                "des3": ["标题3", "描述3"],
+                "recommendation": "4",
+                "price": 1000,
+                "dimension": "/个",
+                "id": "18"
+            }
+        ]
+    }
+}

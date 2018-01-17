@@ -42,6 +42,9 @@ export default {
         back(){
             this.$router.go(-1);
         },
+        getQRCode(){
+
+        },
         alipay(){
             this.$router.push('payCode');
             this.$parent.oOrder.curPaymentMethod = 'alipay';
