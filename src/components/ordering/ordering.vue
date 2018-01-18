@@ -258,7 +258,7 @@ console.time('update');
             this.$router.go(-1);
         },
 
-        playListAni(){
+        playListAni(){ // 菜品持续的慢速自动旋转
             this.$nextTick(()=>{
                 let listAni = ()=>{
                     this.nEndAngle += 0.1;
@@ -283,11 +283,13 @@ console.timeEnd('tick');
                             ,styleConfig.SCREEN_HEIGHT/2
                             ,nListRadius+styleConfig.ORDERING_ITEM_DIAMETER/2
                             ,this.nMenuAngle);
+
                 // 因为不同类别的餐品使用的统一转盘
                 // 不要每次切换类别都初始化一个转动对象
-
                 oList.addEventListener('touchstart', (ev)=>{
                     window.cancelAnimationFrame(listAniReq); // 停止自动旋转
+                    this.bRotating = false;
+
 
                     this.bTransition = false;
                     dialRotation.start(ev.touches[0].clientX,
@@ -311,7 +313,16 @@ console.timeEnd('tick');
                     }
                 });
 
-                document.querySelector('#list').addEventListener('animationend',
+                // 转动菜品结束后在进行自动旋转
+                oList.addEventListener('touchend', ()=>{
+                    if(!this.bRotating){
+                        this.bRotating = true;
+                        this.playListAni();
+                    }
+                });
+
+                // 菜品入场自动旋转动画结束后，开始不停止的缓慢自动旋转
+                oList.addEventListener('animationend',
                         ()=>{
                     if(!this.bRotating){
                         this.bRotating = true;
@@ -343,12 +354,17 @@ console.timeEnd('tick');
             this.$set(this.pageSwitcher.oPageIndex, cata, 0);
         }
 
-        // 自动旋转动画接收后删除其样式，不影响组件内部的拨动动画
+        // 入场自动旋转动画结束后删除其样式，不影响组件内部的拨动动画
         document.querySelector('#dial').addEventListener('animationend', (ev)=>{
             ev.currentTarget.style.transform = 'rotateZ(0deg)';
             ev.currentTarget.style.animationName = 'none';
         });
 
+    },
+    beforeDestroy(){
+        // 离开时必须要停止自动转动，否则会一直记录旋转角度，再次进来时就乱了
+        window.cancelAnimationFrame(listAniReq);
+        this.bRotating = false;
     },
 }
 </script>

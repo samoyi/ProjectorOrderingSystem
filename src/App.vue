@@ -1,8 +1,8 @@
 <template>
     <div id="app" @click="touchFd">
-        <!-- <div id="touchArea">
+        <div id="touchArea">
 
-        </div> -->
+        </div>
         <div id="touchFb" :style="touchFdStyle"></div>
         <router-view
             :store-data="storeData"
@@ -171,16 +171,16 @@ export default {
         30%{opacity: 0.3; transform: scale3d(0.5, 0.5, 0.5);}
         100%{opacity: 0; transform: scale3d(1, 1, 1);}
     }
-    // #touchArea{
-    //     width: $TOUCH_WIDTH;
-    //     height: $TOUCH_HEIGHT;
-    //     position: relative;
-    //     top: $TOUCH_TOP;
-    //     left: $TOUCH_LEFT;
-    //     background: gray;
-    //     opacity: 0;
-    //
-    //
-    // }
+    #touchArea{
+        width: $TOUCH_WIDTH;
+        height: $TOUCH_HEIGHT;
+        position: relative;
+        top: $TOUCH_TOP;
+        left: $TOUCH_LEFT;
+        background: gray;
+        opacity: 0.2;
+
+
+    }
 }
 </style>

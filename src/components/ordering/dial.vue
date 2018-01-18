@@ -114,11 +114,7 @@ export default {
 
             let oStyle = {
                 width: this.diameter*(100/220) + 'px',
-                // width: this.diameter + 'px',
                 height: this.diameter/2 + 'px',
-                // backgroundColor: index===this.nSelected ?
-                //                     styleConfig.BASIC_BLUE : 'transparent',
-                // borderRadius:'0 0 '+ this.diameter +'px '+ this.diameter +'px',
             };
 
             if(count===2){
