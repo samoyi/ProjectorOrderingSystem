@@ -4,11 +4,13 @@
                 v-if="!paySuccess">
             <div id="payCode">
                 <header>需要支付：{{cart.total}}元</header>
-                <div id="code">
+                <div v-if="sCodeURL"  id="code">
                     <p v-show="!sCodeURL">正在生成支付二维码……</p>
                     <img v-show="sCodeURL" :src="sCodeURL" />
                 </div>
-                <p id="payTip">
+                <div v-else="sImgHTML"  id="code" v-html="sImgHTML">
+                </div>
+                <pid="payTip">
                     请使用{{order.curPaymentMethod==='wechat'?'微信':'支付宝'}}<br />
                     扫二维码完成支付
                 </p>
@@ -44,6 +46,7 @@ export default {
     data () {
         return {
             sCodeURL: '',
+            sImgHTML: '',
             paySuccess: false,
         }
     },
@@ -54,56 +57,74 @@ export default {
         backToMain(){
             this.$router.push('main_menu');
         },
+        getOrderParas(sPayMethod){
+            let ratio = sPayMethod==='alipay' ? 1 : 100;
+            return 'total=' + this.cart.total*ratio/5000 +
+                    '&brand=' + this.$parent.oClientConfig.merchant +
+                    '&store=' + this.$parent.oClientConfig.store +
+                    '&machine=' + this.$parent.oClientConfig.table +
+                    '&goodsList=' + JSON.stringify(this.$parent.oCart.list);
+        },
         wechatPay(){
-            // 请求支付二维码并轮询是否支付成功
-
-            let getPayResult = (payID)=>{
-                let url = 'http://huaigao.net/touchpad/wxpay/orderStatus.php?'
-                            + 'out_trade_no=' + payID;
-                ajax.ajax_get(url, res=>{
-                    if(res.trim()==='true'){
-                        clearInterval(timer);
-                        this.sCodeURL = '';
-                        this.wechatSuccess();
-                    }
-                }, err=>{
-                    alert('支付失败，请重试：' + err);
-                    throw new Error('支付失败：' + err);
-                });
-            }
-
-            let url = 'http://huaigao.net/touchpad/wxpay/wxpay.php',
-                data = 'total=' + this.cart.total*100/5000 +
-                        '&brand=' + this.$parent.oClientConfig.merchant +
-                        '&store=' + this.$parent.oClientConfig.store +
-                        '&machine=' + this.$parent.oClientConfig.table +
-                        '&goodsList=' + JSON.stringify(this.$parent.oCart.list);
+            let url = 'http://funca.org/touchpad/wxpay/wxpay.php',
+                data = this.getOrderParas('wechat');
             ajax.ajax_post(url, data, res=>{
+                console.log(res);
                 let aRes = res.trim().split('+');
                 this.sCodeURL = aRes[1];
                 timer = setInterval(()=>{
-                    getPayResult(aRes[0].trim());
+                    this.pollingCheckState(aRes[0].trim());
                 }, 1000);
             }, err=>{
                 alert('获取微信支付二维码失败，请返回重试' + err);
                 throw new Error('获取微信支付二维码失败：' + err);
             });
         },
-        alipaySuccess(){
+        aliPay(){
+            let url = 'http://huaigao.net/touchpad/saomafu/alipay/f2fpay/qrpay.php',
+                data = this.getOrderParas('alipay');
+            ajax.ajax_post(url, data, res=>{
+                let aRes = res.trim().split('+');
+                console.log(aRes[0]);
+                this.sImgHTML = aRes[1];
+                timer = setInterval(()=>{
+                    this.pollingCheckState(aRes[0].trim());
+                }, 1000);
+            }, err=>{
+                alert('获取支付宝支付二维码失败，请返回重试' + err);
+                throw new Error('获取支付宝支付二维码失败：' + err);
+            });
+        },
+        pollingCheckState(payID){
+            let url = 'http://funca.org/touchpad/wxpay/orderStatus.php?'
+                            + 'out_trade_no=' + payID;
+            ajax.ajax_get(url, res=>{
+                if(res.trim()==='true'){
+                    clearInterval(timer);
+                    this.sCodeURL = '';
+                    this.paySuccessCallback();
+                }
+            }, err=>{
+                alert('支付失败，请重试：' + err);
+                throw new Error('支付失败：' + err);
+            });
+        },
+        paySuccessCallback(){
             this.paySuccess = true;
             this.$parent.nOrderState = 1;
             this.$emit('paySuccess', this.cart.list);
-        },
-        wechatSuccess(){
-            this.paySuccess = true;
-            this.$parent.nOrderState = 1;
-            this.$emit('paySuccess', this.cart.list);
-        },
+        }
     },
     computed: {
     },
     mounted(){
-        this.wechatPay();
+        let sPayMethod = this.$parent.oOrder.curPaymentMethod;
+        if(sPayMethod === 'alipay'){
+            this.aliPay();
+        }
+        else if(sPayMethod === 'wechat'){
+            this.wechatPay();
+        }
     },
     beforeDestroy(){
         clearInterval(timer);

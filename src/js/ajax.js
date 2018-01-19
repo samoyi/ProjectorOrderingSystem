@@ -20,6 +20,26 @@ function ajax_get(sURL, fnSuccessCallback, fnFailCallback)
 	xhr.send(null);
 }
 
+function ajax_getBlob(sURL, fnSuccessCallback, fnFailCallback)
+{
+	let xhr = new XMLHttpRequest();
+	xhr.addEventListener('readystatechange', function()
+	{
+		if (xhr.readyState == 4)
+		{
+			if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304){
+				fnSuccessCallback && fnSuccessCallback( xhr.response );
+			}
+			else{
+				fnFailCallback && fnFailCallback( xhr.status );
+			}
+		}
+	}, false);
+    xhr.responseType = "blob";
+	xhr.open("get", sURL, true);
+	xhr.send(null);
+}
+
 function ajax_post(sURL, data, fnSuccessCallback, fnFailCallback)
 {
 	let xhr = new XMLHttpRequest();
@@ -43,4 +63,4 @@ function ajax_post(sURL, data, fnSuccessCallback, fnFailCallback)
 }
 
 
-module.exports = {ajax_get, ajax_post};
+module.exports = {ajax_get, ajax_post, ajax_getBlob};
