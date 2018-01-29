@@ -1,23 +1,26 @@
 'use strict';
 
-function findAsciiIndexes(str){
-    let aStr = [...str],
-        aIndex = [];
-    aStr.filter((char,index)=>{
-        if(char.codePointAt(0)<127){
-            aIndex.push(index);
-        }
-    });
-    return aIndex;
-}
+// function findAsciiIndexes(str){
+//     let aStr = [...str],
+//         aIndex = [];
+//     aStr.filter((char,index)=>{
+//         if(char.codePointAt(0)<127){
+//             aIndex.push(index);
+//         }
+//     });
+//     return aIndex;
+// }
 
 // 若干个点均匀分布在圆环上，得出每个点相对于圆心的坐标
 /**
  * @param nRadius     {integer}  半径像素值
  * @param nAmount     {integer} 用几个点将圆环均分
- * @param nInitRadian {integer} 第一个点的弧度制，默认为0，3点钟方向，逆时针为正方向
+ * @param nInitRadian {integer} 第一个点的弧度值，默认为0，3点钟方向，逆时针为正方向
  */
 function coordinatesOnRing(nRadius, nAmount, nInitRadian=0){
+    if(nRadius<0 || nAmount<1 || !Number.isInteger(nAmount)){
+        return [];
+    }
     const nRadianInterval = Math.PI*2/nAmount;
     let nRadian = 0,
         aCoordinate = [];
@@ -30,8 +33,11 @@ function coordinatesOnRing(nRadius, nAmount, nInitRadian=0){
     return aCoordinate;
 }
 
-// 和coordinatesOnRing一样，只不过返回弧度值
-function radiansOnRing(nRadius, nAmount, nInitRadian=0){
+// 和coordinatesOnRing原理一样，只不过返回弧度值
+function radiansOnRing(nAmount, nInitRadian=0){
+    if(nAmount<1 || !Number.isInteger(nAmount)){
+        return [];
+    }
     const nRadianInterval = Math.PI*2/nAmount;
     let nRadian = 0,
         aRadian = [];
@@ -45,7 +51,7 @@ function radiansOnRing(nRadius, nAmount, nInitRadian=0){
 }
 
 module.exports = {
-    findAsciiIndexes,
+    // findAsciiIndexes,
     coordinatesOnRing,
     radiansOnRing,
 };
