@@ -48,6 +48,11 @@ export default {
             sCodeURL: '',
             sImgHTML: '',
             paySuccess: false,
+            oOrderURLs: {
+                'wechat': 'http://www.huaigao.net/touchpad/wxpay/wxpay.php',
+                'alipay': 'http://www.huaigao.net/touchpad/saomafu/alipay/f2fpay/qrpay.php',
+                'checkState': 'http://www.huaigao.net/touchpad/wxpay/orderStatus.php'
+            },
         }
     },
     methods: {
@@ -66,10 +71,9 @@ export default {
                     '&goodsList=' + JSON.stringify(this.$parent.oCart.list);
         },
         wechatPay(){
-            let url = 'http://funca.org/touchpad/wxpay/wxpay.php',
+            let url = this.oOrderURLs.wechat,
                 data = this.getOrderParas('wechat');
             ajax.ajax_post(url, data, res=>{
-                console.log(res);
                 let aRes = res.trim().split('+');
                 this.sCodeURL = aRes[1];
                 timer = setInterval(()=>{
@@ -81,11 +85,10 @@ export default {
             });
         },
         aliPay(){
-            let url = 'http://huaigao.net/touchpad/saomafu/alipay/f2fpay/qrpay.php',
+            let url = this.oOrderURLs.alipay,
                 data = this.getOrderParas('alipay');
             ajax.ajax_post(url, data, res=>{
                 let aRes = res.trim().split('+');
-                console.log(aRes[0]);
                 this.sImgHTML = aRes[1];
                 timer = setInterval(()=>{
                     this.pollingCheckState(aRes[0].trim());
@@ -96,8 +99,8 @@ export default {
             });
         },
         pollingCheckState(payID){
-            let url = 'http://funca.org/touchpad/wxpay/orderStatus.php?'
-                            + 'out_trade_no=' + payID;
+            let url = this.oOrderURLs.checkState
+                        + '?out_trade_no=' + payID;
             ajax.ajax_get(url, res=>{
                 if(res.trim()==='true'){
                     clearInterval(timer);
