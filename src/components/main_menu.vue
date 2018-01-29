@@ -12,11 +12,6 @@
                 @click="showOrder(1)" v-btnTouchAni>查看订单</div>
         <div class="order bottom-order" v-if="orderState" v-show="!bDisplayOrder"
                 @click="showOrder(0)" v-btnTouchAni>查看订单</div>
-        <!-- <div id="order-list" v-show="bDisplayOrder"
-                 :style="{transform: 'rotateZ(' + position*180 + 'deg)'}">
-            <div @click="complete">已上齐</div>
-            <div @click="closeOrder">关闭</div>
-        </div> -->
         <div id="order-list" v-show="bDisplayOrder"
                 :style="{transform: 'rotateZ(' + position*180 + 'deg)'}">
             <div id="list">
@@ -51,8 +46,6 @@
 </template>
 
 <script>
-
-
 import dial from './ordering/dial';
 import styleConfig from '../js/styleConfig';
 
@@ -89,9 +82,6 @@ export default {
     mounted(){
     }
 }
-
-
-
 </script>
 
 <style scoped lang="scss">
@@ -139,7 +129,6 @@ export default {
                     .orderWrapper{
                         margin-bottom: 36px;
                         .total{
-                            // position: absolute; left: 0px; top: 0px;
                             width: 100%;
                             line-height: 20px;
                             font-size: 12px;

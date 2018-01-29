@@ -5,12 +5,11 @@
             <div id="payCode">
                 <header>需要支付：{{cart.total}}元</header>
                 <div v-if="sCodeURL"  id="code">
-                    <p v-show="!sCodeURL">正在生成支付二维码……</p>
-                    <img v-show="sCodeURL" :src="sCodeURL" />
+                    <p v-show="!bImgLoad">{{sLoadingTip}}</p>
+                    <img @load="imgLoad" @error="imgErr"
+                            v-show="sCodeURL" :src="sCodeURL" />
                 </div>
-                <div v-else="sImgHTML"  id="code" v-html="sImgHTML">
-                </div>
-                <pid="payTip">
+                <p id="payTip">
                     请使用{{order.curPaymentMethod==='wechat'?'微信':'支付宝'}}<br />
                     扫二维码完成支付
                 </p>
@@ -37,7 +36,7 @@
 
 import ajax from '../../js/ajax';
 
-let timer = null; // 轮询用
+let timer = null; // 显示二维码之后轮询是否扫码支付成功
 
 export default {
     props: ["cart", "position", "order"],
@@ -46,6 +45,8 @@ export default {
     data () {
         return {
             sCodeURL: '',
+            bImgLoad: false,
+            sLoadingTip: '正在生成支付二维码……',
             sImgHTML: '',
             paySuccess: false,
             oOrderURLs: {
@@ -55,6 +56,7 @@ export default {
             },
         }
     },
+
     methods: {
         back(){
             this.$router.go(-1);
@@ -76,6 +78,7 @@ export default {
             ajax.ajax_post(url, data, res=>{
                 let aRes = res.trim().split('+');
                 this.sCodeURL = aRes[1];
+                clearInterval(timer);
                 timer = setInterval(()=>{
                     this.pollingCheckState(aRes[0].trim());
                 }, 1000);
@@ -89,7 +92,10 @@ export default {
                 data = this.getOrderParas('alipay');
             ajax.ajax_post(url, data, res=>{
                 let aRes = res.trim().split('+');
-                this.sImgHTML = aRes[1];
+                // 下面这一行提取后台返回值中的src并替换其中的&实体
+                this.sCodeURL = aRes[1].match(/src="([^"]+)/)[1]
+                                    .replace(/\&amp;/g, '&');
+                clearInterval(timer);
                 timer = setInterval(()=>{
                     this.pollingCheckState(aRes[0].trim());
                 }, 1000);
@@ -98,6 +104,15 @@ export default {
                 throw new Error('获取支付宝支付二维码失败：' + err);
             });
         },
+
+        imgLoad(){
+            this.bImgLoad = true;
+        },
+        imgErr(){
+            clearInterval(timer);
+            this.sLoadingTip = '获取支付二维码失败，请返回重试';
+        },
+
         pollingCheckState(payID){
             let url = this.oOrderURLs.checkState
                         + '?out_trade_no=' + payID;
