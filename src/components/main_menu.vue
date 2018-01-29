@@ -53,8 +53,8 @@
 <script>
 
 
-import dial from './dial';
-import styleConfig from '../../js/styleConfig';
+import dial from './ordering/dial';
+import styleConfig from '../js/styleConfig';
 
 export default {
     name: 'main_menu',
@@ -95,7 +95,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-@import '../../scss/common.scss';
+@import '../scss/common.scss';
 #main{
     width: 100%; height: 100%; position: absolute; top: 0;
     .order{

@@ -105,6 +105,7 @@ export default {
                     this.paySuccessCallback();
                 }
             }, err=>{
+                clearInterval(timer);
                 alert('支付失败，请重试：' + err);
                 throw new Error('支付失败：' + err);
             });

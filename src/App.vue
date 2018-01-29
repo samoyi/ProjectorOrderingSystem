@@ -1,5 +1,5 @@
 <template>
-    <div id="app" @click="touchFd">
+    <div id="app">
         <div id="touchArea">
 
         </div>
@@ -104,6 +104,9 @@ export default {
                 total: 0,
             };
         },
+
+        // 全局的触摸反馈的动效，本来是加载#app上的
+        // 后来发现使用触摸屏是浏览器自带动效，所以没有加
         touchFd(ev){
             this.touchFdStyle = {
                 left: ev.clientX-5 + 'px',
@@ -179,8 +182,6 @@ export default {
         left: $TOUCH_LEFT;
         background: gray;
         opacity: 0.2;
-
-
     }
 }
 </style>
