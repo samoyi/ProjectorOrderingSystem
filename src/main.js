@@ -26,6 +26,7 @@ const router = new VueRouter({
 });
 
 
+
 // 按钮点击时的动画
 Vue.directive('btnTouchAni', {
     inserted: btn=>{
@@ -44,4 +45,10 @@ new Vue({
     el: '#app',
     router,
     render: h => h(App)
+});
+
+
+// 默认两个触摸点时触发右键菜单
+document.addEventListener('contextmenu', (ev)=>{
+    ev.preventDefault();
 });

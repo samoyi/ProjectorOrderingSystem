@@ -7,7 +7,7 @@
                 <div v-if="sCodeURL"  id="code">
                     <p v-show="!bImgLoad">{{sLoadingTip}}</p>
                     <img @load="imgLoad" @error="imgErr"
-                            v-show="sCodeURL" :src="sCodeURL" />
+                            v-show="bImgLoad" :src="sCodeURL" />
                 </div>
                 <p id="payTip">
                     请使用{{order.curPaymentMethod==='wechat'?'微信':'支付宝'}}<br />
