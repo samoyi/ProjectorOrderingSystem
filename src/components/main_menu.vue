@@ -42,11 +42,13 @@
             <div class="complete" @click="complete">已上齐</div>
             <div class="closeOrder" @click="closeOrder">关闭</div>
         </div>
+        <!-- <custom-alert></custom-alert> -->
     </div>
 </template>
 
 <script>
 import dial from './ordering/dial';
+// import customAlert from './public/customAlert';
 import styleConfig from '../js/styleConfig';
 
 export default {
@@ -54,6 +56,7 @@ export default {
     props: ["storeData", "orderState", "position", "order"],
     components: {
         'dial-component': dial,
+        // 'custom-alert': customAlert,
     },
     data () {
         return {

@@ -108,7 +108,7 @@ export default {
         },
         iconWrapperStyle(count, index){
             if(count<1 || count>4){
-                alert('主菜单图标数量至少一个最多四个');
+                this.$parent.$parent.sAlertMsg = '主菜单图标数量至少一个最多四个';
                 return;
             }
 

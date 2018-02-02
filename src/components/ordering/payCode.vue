@@ -83,8 +83,7 @@ export default {
                     this.pollingCheckState(aRes[0].trim());
                 }, 1000);
             }, err=>{
-                alert('获取微信支付二维码失败，请返回重试' + err);
-                throw new Error('获取微信支付二维码失败：' + err);
+                this.$parent.sAlertMsg = '获取微信支付二维码失败，请返回重试：' + err;
             });
         },
         aliPay(){
@@ -100,8 +99,7 @@ export default {
                     this.pollingCheckState(aRes[0].trim());
                 }, 1000);
             }, err=>{
-                alert('获取支付宝支付二维码失败，请返回重试' + err);
-                throw new Error('获取支付宝支付二维码失败：' + err);
+                this.$parent.sAlertMsg = '获取支付宝支付二维码失败，请返回重试：' + err;
             });
         },
 
@@ -124,8 +122,7 @@ export default {
                 }
             }, err=>{
                 clearInterval(timer);
-                alert('支付失败，请重试：' + err);
-                throw new Error('支付失败：' + err);
+                this.$parent.sAlertMsg = '支付失败，请重试：' + err;
             });
         },
         paySuccessCallback(){

@@ -15,15 +15,21 @@
             @paySuccess= "paySuccess"
             @complete="complete">
         </router-view>
+        <custom-alert :alert-message="sAlertMsg.trim()"
+                @close="closeAlert"></custom-alert>
     </div>
 </template>
 
 <script>
 
 import ajax from './js/ajax';
+import customAlert from './components/public/customAlert';
 
 export default {
     name: 'app',
+    components: {
+        'custom-alert': customAlert,
+    },
     data () {
         return {
             oClientConfig: [],
@@ -51,6 +57,8 @@ export default {
             nPosition: 0,
 
             touchFdStyle: {},
+
+            sAlertMsg: '',
         }
     },
     methods:{
@@ -120,13 +128,16 @@ export default {
                 };
             }, 400);
         },
+
+        closeAlert(){
+            this.sAlertMsg = '';
+        },
     },
     mounted(){
         // 根据网址中的参数确定当前具体的客户端
         let aClientConfig = location.search.slice(1).split('&');
         if(aClientConfig.length !== 3){
-            alert('网址错误');
-            throw new Error('网址错误');
+            this.sAlertMsg = '网址错误';
         }
         let oClientConfig = {},
             aPair = [];
@@ -136,8 +147,7 @@ export default {
                 oClientConfig[aPair[0]] = aPair[1];
             }
             else{
-                alert('网址错误');
-                throw new Error('网址错误');
+                this.sAlertMsg = '网址错误';
             }
         });
         this.oClientConfig = oClientConfig;
@@ -150,8 +160,8 @@ export default {
             this.storeData.primaryCatas = oConfig.primaryCatas;
             this.storeData.menu = oConfig.menu;
         }, err=>{
-            alert('读取店铺配置失败：' + err);
-            throw new Error('读取店铺配置失败：' + err);
+            this.sAlertMsg = '读取店铺配置失败：' + err;
+
         });
     },
 }
