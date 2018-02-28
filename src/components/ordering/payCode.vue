@@ -66,7 +66,7 @@ export default {
         },
         getOrderParas(sPayMethod){
             let ratio = sPayMethod==='alipay' ? 1 : 100;
-            return 'total=' + this.cart.total*ratio/5000 +
+            return 'total=' + this.cart.total*ratio +
                     '&brand=' + this.$parent.oClientConfig.merchant +
                     '&store=' + this.$parent.oClientConfig.store +
                     '&machine=' + this.$parent.oClientConfig.table +
@@ -90,10 +90,8 @@ export default {
             let url = this.oOrderURLs.alipay,
                 data = this.getOrderParas('alipay');
             ajax.ajax_post(url, data, res=>{
-                let aRes = res.trim().split('+');
-                // 下面这一行提取后台返回值中的src并替换其中的&实体
-                this.sCodeURL = aRes[1].match(/src="([^"]+)/)[1]
-                                    .replace(/\&amp;/g, '&');
+                let aRes = res.trim().split('-');
+                this.sCodeURL = 'data:image/png;base64,' + aRes[1];
                 clearInterval(timer);
                 timer = setInterval(()=>{
                     this.pollingCheckState(aRes[0].trim());

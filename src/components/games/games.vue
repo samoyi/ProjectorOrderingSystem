@@ -1,7 +1,7 @@
 <template>
     <div id="games">
         <!-- 用iframe引入游戏，根据画面情况可能要对iframe进行缩小或扩大 -->
-        <iframe src="http://localhost/Funca/FuncaProjects/2017/desktop/shenjingmao2/index.html"></iframe>
+        <iframe src="http://localhost/Funca/FuncaProjects/2017/desktop/wuziqi/single.html"></iframe>
         <div class="back" v-btnTouchAni @click="back">返回</div>
         <div class="back backTop" v-btnTouchAni @click="back">返回</div>
     </div>
@@ -30,6 +30,7 @@ export default {
     position: absolute; top: 0; left: 0;
     iframe{
         width: 100%; height: 100%;
+        transform: scale3d(0.65, 0.65, 0.65); 
     }
     .back{
         background-color: $BASIC_BLUE;
