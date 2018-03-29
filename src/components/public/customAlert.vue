@@ -1,3 +1,5 @@
+<!-- 因为多次alert会导致浏览器提醒关闭网页，因此不能用系统alert
+该组件为弹出提醒 -->
 <template>
     <div v-show="alertMessage.trim()" id="customAlert">
         <p>{{alertMessage.trim()}}</p>
@@ -11,7 +13,7 @@
 
 export default {
     props: {
-        alertMessage: String,
+        alertMessage: String, // 提示文本。通过其是否非空来决定是否弹出
         default: '',
     },
     data () {
@@ -20,7 +22,6 @@ export default {
     },
     methods: {
         close(){
-            // this.$palertMessage = '';
             this.$emit('close');
         },
     },

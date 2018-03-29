@@ -1,3 +1,4 @@
+<!-- 购物车组件 -->
 <template>
     <div id="cart" :style="{transform: 'rotateZ(' + position*180 + 'deg)'}">
         <div id="list">
@@ -40,11 +41,13 @@ export default {
         }
     },
     methods: {
+        // 商品数量减一
         minus(item, index){
             if(item.amount>0){
                 item.amount--;
             }
         },
+        // 商品数量加一
         add(item, index){
             if(item.amount<9){
                 item.amount++;
@@ -53,6 +56,8 @@ export default {
         back(){
             this.$router.go(-1);
         },
+
+        // 从购物车进入支付环节
         order(){
             this.$router.push('pay');
         },

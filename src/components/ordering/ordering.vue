@@ -1,3 +1,4 @@
+<!-- 点餐页面 -->
 <template>
     <div id="ordering">
         <ul id="list" v-if="selectedCata">

@@ -1,3 +1,4 @@
+<!-- 打开页面之后的主菜单 -->
 <template>
     <div id="main">
         <dial-component id="dial"
@@ -66,16 +67,24 @@ export default {
         }
     },
     methods: {
+
+        // 接受拨盘组件的路由通知，并路由到指定组件
         routes(sCata){
             this.$router.push(sCata);
         },
+
+        // 主界面点击查看订单，显示订单
         showOrder(nPosition){
             this.$parent.nPosition = nPosition;
             this.bDisplayOrder = true;
         },
+
+        // 关闭订单
         closeOrder(){
             this.bDisplayOrder = false;
         },
+
+        // 点击“已上齐”，通知App.vue
         complete(){
             this.$emit('complete');
             this.$parent.nOrderState = 0;

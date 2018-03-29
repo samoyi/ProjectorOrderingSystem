@@ -1,8 +1,8 @@
 <template>
     <div id="app">
-        <div id="touchArea">
-
-        </div>
+        <!-- 可触摸区域。开发时方便了解范围，正式使用时不需要，应注释 -->
+        <div id="touchArea"></div>
+        <!-- 点击时的反馈效果。后来发现自带返回效果，因此不需要 -->
         <div id="touchFb" :style="touchFdStyle"></div>
         <router-view
             :store-data="storeData"
@@ -37,9 +37,9 @@ export default {
                 primaryCatas: [],
                 menu: {},
             },
-            oCart: {
-                total: 0,
-                list: [],
+            oCart: { // 购物车数据
+                total: 0, // 购物车商品总数
+                list: [], // 商品列表
             },
             oOrder: {
                 curPaymentMethod: '', //支付时选择的支付方式
@@ -53,6 +53,7 @@ export default {
             // 付款成功后，nOrderState变为1，清空购物车，首页可以查看订单详情
             // 用户点击已上齐，则点餐结束，清空订单详情，nOrderState变为0
             nOrderState: 0,
+
             // 在操作方向有影响的情况下，例如进入购物车。0为当前方向，1为对向
             nPosition: 0,
 
@@ -63,14 +64,16 @@ export default {
     },
     methods:{
         // 两款商品可以同名但id肯定不同，如果用户买了两个同名商品，这里用id来区分
+        // 将商品加入购物车
         add(sCata, oItem){
-            let oFound = this.oCart.list.find(item=>{
+            // 查找新加入的商品在购物车里是否有同款商品
+            let oFound = this.oCart.list.find(item=>{ // 查找是否加入同
                 return item.id === oItem.id;
             });
-            if(oFound){
+            if(oFound){ // 有同款商品，则该款商品数量加一
                 oFound.amount++;
             }
-            else{
+            else{ // 否则购物车列表新加一项
                 this.oCart.list.push({
                     id: oItem.id,
                     amount: 1,
@@ -79,14 +82,15 @@ export default {
                 });
             }
         },
-        order(){
-            if(this.oCart.list.length){
-                this.oCart.list.forEach(item=>{
-                });
-            }
-        },
+        // order(){
+        //     if(this.oCart.list.length){
+        //         this.oCart.list.forEach(item=>{
+        //         });
+        //     }
+        // },
+
+        // 支付成功，填写订单状态，然后清空购物车
         paySuccess(list){
-            // 填写订单状态，然后清空购物车
             let date = new Date();
             this.oOrder.list.push({
                 items: list,
@@ -103,8 +107,9 @@ export default {
                 list: [],
             };
         },
+
+        // 点击“已上齐”按钮，清空订单记录
         complete(){
-            // 清空订单状态
             this.nOrderState = 0;
             this.oOrder = {
                 curPaymentMethod: '',
@@ -136,9 +141,11 @@ export default {
     mounted(){
         // 根据网址中的参数确定当前具体的客户端
         let aClientConfig = location.search.slice(1).split('&');
-        if(aClientConfig.length !== 3){
+        if(aClientConfig.length !== 3){ // 必须要有三个参数
             this.sAlertMsg = '网址错误';
         }
+
+        // 将三组参数组建为对象
         let oClientConfig = {},
             aPair = [];
         aClientConfig.forEach(query=>{
@@ -152,7 +159,8 @@ export default {
         });
         this.oClientConfig = oClientConfig;
 
-// 测试url http://localhost:8080/?merchant=testMerchant&store=37ac5ae2d57709540b27e1ff7f39e2fec903bba9af21ad241309c966e57fb8e7&table=1#/main_menu
+        // 以下为测试时请求本地数据。实际使用时是请求后端数据
+        // 测试url http://localhost:8080/?merchant=testMerchant&store=37ac5ae2d57709540b27e1ff7f39e2fec903bba9af21ad241309c966e57fb8e7&table=1#/main_menu
         let url = './server-side/merchants/' + oClientConfig.merchant
                         + '/' + oClientConfig.store + '/items.json';
         ajax.ajax_get(url, res=>{
@@ -161,7 +169,6 @@ export default {
             this.storeData.menu = oConfig.menu;
         }, err=>{
             this.sAlertMsg = '读取店铺配置失败：' + err;
-
         });
     },
 }
