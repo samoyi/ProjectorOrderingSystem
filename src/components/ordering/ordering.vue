@@ -129,7 +129,7 @@ let listAniReq = null; // 自动旋转的 requestAnimationFrame
 let oList = null; // 菜单节点
 
 export default {
-    props: ["storeData", "cart"],
+    props: ["storeData"],
     data () {
         return {
             dialDiameter: styleConfig.ORDERING_DIAL_DIAMETER,
@@ -253,7 +253,8 @@ console.time('update');
         order(nPosition){
             // this.$emit('order');
             this.$router.push('cart');
-            this.$parent.nPosition = nPosition;
+            // this.$parent.nPosition = nPosition;
+            this.$store.commit('changePosition', nPosition);
         },
         back(){
             this.$router.go(-1);
@@ -339,6 +340,10 @@ console.timeEnd('tick');
             let items = this.storeData.menu[this.selectedCata],
                 nCurPageIndex = this.pageSwitcher.oPageIndex[this.selectedCata];
             return items.slice(nCurPageIndex*10, (nCurPageIndex+1)*10);
+        },
+        cart(){
+            console.log(this.$store.state.oCart);
+            return this.$store.state.oCart;
         },
     },
     mounted(){

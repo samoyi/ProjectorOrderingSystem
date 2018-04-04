@@ -4,14 +4,12 @@
         <div id="touchArea"></div>
         <!-- 点击时的反馈效果。后来发现自带返回效果，因此不需要 -->
         <div id="touchFb" :style="touchFdStyle"></div>
+        <!-- :cart="oCart" -->
         <router-view
             :store-data="storeData"
-            :cart="oCart"
             :order-state="nOrderState"
-            :position="nPosition"
             :order="oOrder"
             @add="add"
-            @order="order"
             @paySuccess= "paySuccess"
             @complete="complete">
         </router-view>
@@ -37,10 +35,10 @@ export default {
                 primaryCatas: [],
                 menu: {},
             },
-            oCart: { // 购物车数据
-                total: 0, // 购物车商品总数
-                list: [], // 商品列表
-            },
+            // oCart: { // 购物车数据
+            //     total: 0, // 购物车商品总数
+            //     list: [], // 商品列表
+            // },
             oOrder: {
                 curPaymentMethod: '', //支付时选择的支付方式
                 // 一个订单完成后，会把[购买物品、支付方式、支付时间]加入list
@@ -55,26 +53,38 @@ export default {
             nOrderState: 0,
 
             // 在操作方向有影响的情况下，例如进入购物车。0为当前方向，1为对向
-            nPosition: 0,
+            // 用于计算元素显示时的rotete是0还是180
+            // nPosition: 0,
 
             touchFdStyle: {},
 
             sAlertMsg: '',
         }
     },
+    computed: {
+        cart(){
+            return this.$store.state.oCart;
+        },
+    },
     methods:{
         // 两款商品可以同名但id肯定不同，如果用户买了两个同名商品，这里用id来区分
         // 将商品加入购物车
         add(sCata, oItem){
             // 查找新加入的商品在购物车里是否有同款商品
-            let oFound = this.oCart.list.find(item=>{ // 查找是否加入同
+            let oFound = this.cart.list.find(item=>{ // 查找是否加入同
                 return item.id === oItem.id;
             });
             if(oFound){ // 有同款商品，则该款商品数量加一
                 oFound.amount++;
             }
             else{ // 否则购物车列表新加一项
-                this.oCart.list.push({
+                // this.cart.list.push({
+                //     id: oItem.id,
+                //     amount: 1,
+                //     price: oItem.price,
+                //     name: oItem.name,
+                // });
+                this.$store.commit('addToCart', {
                     id: oItem.id,
                     amount: 1,
                     price: oItem.price,
@@ -82,30 +92,25 @@ export default {
                 });
             }
         },
-        // order(){
-        //     if(this.oCart.list.length){
-        //         this.oCart.list.forEach(item=>{
-        //         });
-        //     }
-        // },
 
         // 支付成功，填写订单状态，然后清空购物车
         paySuccess(list){
             let date = new Date();
             this.oOrder.list.push({
                 items: list,
-                total: this.oCart.total,
+                total: this.cart.total,
                 paymentMethod: this.oOrder.curPaymentMethod==='wechat'?'微信':'支付宝',
                 time: date.getMonth()+1 +'月'+ date.getDate() +'日　'
                         + date.getHours() +'时'+ date.getMinutes() + '分'
                         + date.getSeconds() +'秒',
             });
             // 每一个单独订单的价格汇总到总订单价格
-            this.oOrder.total += this.oCart.total;
-            this.oCart = {
-                total: 0,
-                list: [],
-            };
+            this.oOrder.total += this.cart.total;
+            // this.oCart = {
+            //     total: 0,
+            //     list: [],
+            // };
+            this.$store.commit('emptyCart');
         },
 
         // 点击“已上齐”按钮，清空订单记录

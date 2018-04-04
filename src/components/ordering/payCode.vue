@@ -39,7 +39,7 @@ import ajax from '../../js/ajax';
 let timer = null; // 显示二维码之后轮询是否扫码支付成功
 
 export default {
-    props: ["cart", "position", "order"],
+    props: [ "order"],
     components: {
     },
     data () {
@@ -70,7 +70,7 @@ export default {
                     '&brand=' + this.$parent.oClientConfig.merchant +
                     '&store=' + this.$parent.oClientConfig.store +
                     '&machine=' + this.$parent.oClientConfig.table +
-                    '&goodsList=' + JSON.stringify(this.$parent.oCart.list);
+                    '&goodsList=' + JSON.stringify(this.$parent.cart.list);
         },
         wechatPay(){
             let url = this.oOrderURLs.wechat,
@@ -130,6 +130,13 @@ export default {
         }
     },
     computed: {
+        cart(){
+            console.log(this.$store.state.oCart);
+            return this.$store.state.oCart;
+        },
+        position(){
+            return this.$store.state.nPosition;
+        },
     },
     mounted(){
         let sPayMethod = this.$parent.oOrder.curPaymentMethod;

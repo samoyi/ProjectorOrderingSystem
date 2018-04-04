@@ -11,8 +11,10 @@
     "test": "mocha"
   },
   "dependencies": {
+    "babel-polyfill": "^6.26.0",
     "vue": "^2.4.4",
-    "vue-router": "^3.0.1"
+    "vue-router": "^3.0.1",
+    "vuex": "^3.0.1"
   },
   "browserslist": [
     "> 1%",

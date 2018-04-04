@@ -10,7 +10,7 @@
                         <td class="td">数量</td>
                         <td class="td">价格</td>
                     </tr>
-                    <tr class="tr" v-for="(item,index) in oCart.list">
+                    <tr class="tr" v-for="(item,index) in cart.list">
                         <td class="td">{{item.name}}</td>
                         <td class="td">
                             <span @click="minus(item, index)">-</span>
@@ -25,6 +25,7 @@
         </div>
         <div class="back" @click="back" v-btnTouchAni>返回</div>
         <div class="order" v-show="total>0" @click="order" v-btnTouchAni>下单</div>
+        <div class="empty" v-show="total>0" @click="empty" v-btnTouchAni>清空</div>
     </div>
 </template>
 
@@ -32,12 +33,12 @@
 
 
 export default {
-    props: ["cart", "position"],
+    props: [],
     components: {
     },
     data () {
         return {
-            oCart: this.cart,
+            // oCart: this.cart,
         }
     },
     methods: {
@@ -61,19 +62,29 @@ export default {
         order(){
             this.$router.push('pay');
         },
+
+        // 清空购物车
+        empty(){
+            this.$store.commit('emptyCart');
+        },
     },
     computed: {
+        cart(){
+            return this.$store.state.oCart;
+        },
         total(){
             let nTotal = 0;
-            this.oCart.list.forEach(item=>{
+            this.cart.list.forEach(item=>{
                 nTotal += item.price*item.amount/100;
             });
-            this.oCart.total = nTotal;
-            return nTotal;
-        }
+            // this.cart.total = nTotal;
+            // return nTotal;
+            this.$store.commit('setCartTotal', nTotal);
+        },
+        position(){
+            return this.$store.state.nPosition;
+        },
     },
-    mounted(){
-    }
 }
 
 

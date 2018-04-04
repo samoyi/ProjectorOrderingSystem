@@ -30,7 +30,7 @@
 
 
 export default {
-    props: ["cart", "position", "order"],
+    props: ["order"],
     components: {
     },
     data () {
@@ -55,7 +55,12 @@ export default {
         },
     },
     computed: {
-
+        cart(){
+            return this.$store.state.oCart;
+        },
+        position(){
+            return this.$store.state.nPosition;
+        },
     },
     mounted(){
     }

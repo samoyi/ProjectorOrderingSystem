@@ -54,7 +54,7 @@ import styleConfig from '../js/styleConfig';
 
 export default {
     name: 'main_menu',
-    props: ["storeData", "orderState", "position", "order"],
+    props: ["storeData", "orderState", "order"],
     components: {
         'dial-component': dial,
         // 'custom-alert': customAlert,
@@ -75,7 +75,8 @@ export default {
 
         // 主界面点击查看订单，显示订单
         showOrder(nPosition){
-            this.$parent.nPosition = nPosition;
+            // this.$parent.nPosition = nPosition;
+            this.$store.commit('changePosition', nPosition);
             this.bDisplayOrder = true;
         },
 
@@ -89,6 +90,11 @@ export default {
             this.$emit('complete');
             this.$parent.nOrderState = 0;
             this.bDisplayOrder = false;
+        },
+    },
+    computed: {
+        position(){
+            return this.$store.state.nPosition;
         },
     },
     mounted(){
