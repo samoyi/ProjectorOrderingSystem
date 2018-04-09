@@ -13,9 +13,9 @@
                     <tr class="tr" v-for="(item,index) in cart.list">
                         <td class="td">{{item.name}}</td>
                         <td class="td">
-                            <span @click="minus(item, index)">-</span>
+                            <span @click="minus(item)">-</span>
                             {{item.amount}}
-                            <span @click="add(item, index)">+</span>
+                            <span @click="add(item)">+</span>
                         </td>
                         <td class="td">{{item.price*item.amount/100}}</td>
                     </tr>
@@ -43,15 +43,15 @@ export default {
     },
     methods: {
         // 商品数量减一
-        minus(item, index){
+        minus(item){
             if(item.amount>0){
-                item.amount--;
+                this.$store.commit('minusAmount', item.id);
             }
         },
         // 商品数量加一
-        add(item, index){
+        add(item){
             if(item.amount<9){
-                item.amount++;
+                this.$store.commit('addAmount', item.id);
             }
         },
         back(){
@@ -73,19 +73,13 @@ export default {
             return this.$store.state.oCart;
         },
         total(){
-            let nTotal = 0;
-            this.cart.list.forEach(item=>{
-                nTotal += item.price*item.amount/100;
-            });
-            // this.cart.total = nTotal;
-            // return nTotal;
-            this.$store.commit('setCartTotal', nTotal);
+            return this.$store.getters.nCartAmount;
         },
         position(){
             return this.$store.state.nPosition;
         },
     },
-}
+};
 
 
 

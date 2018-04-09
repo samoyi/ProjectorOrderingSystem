@@ -18,7 +18,7 @@
                     </tr>
                 </table>
             </div>
-            <div id="total">总计：¥{{cart.total}}</div>
+            <div id="total">总计：¥{{total}}</div>
         </div>
         <div id="alipay" @click="alipay" v-btnTouchAni>支付宝</div>
         <div id="wechat" @click="wechat" v-btnTouchAni>微信</div>
@@ -31,12 +31,19 @@
 
 export default {
     props: ["order"],
-    components: {
-    },
     data () {
-        return {
-            // aCart: this.cart,
-        }
+        return {}
+    },
+    computed: {
+        cart(){
+            return this.$store.state.oCart;
+        },
+        total(){
+            return this.$store.getters.nCartAmount;
+        },
+        position(){
+            return this.$store.state.nPosition;
+        },
     },
     methods: {
         back(){
@@ -47,23 +54,15 @@ export default {
         },
         alipay(){
             this.$router.push('payCode');
-            this.$parent.oOrder.curPaymentMethod = 'alipay';
+            // this.$parent.oOrder.curPaymentMethod = 'alipay';
+            this.$store.commit('recordCurPaymentMethod', 'alipay');
         },
         wechat(){
             this.$router.push('payCode');
-            this.$parent.oOrder.curPaymentMethod = 'wechat';
+            // this.$parent.oOrder.curPaymentMethod = 'wechat';
+            this.$store.commit('recordCurPaymentMethod', 'wechat');
         },
     },
-    computed: {
-        cart(){
-            return this.$store.state.oCart;
-        },
-        position(){
-            return this.$store.state.nPosition;
-        },
-    },
-    mounted(){
-    }
 }
 
 

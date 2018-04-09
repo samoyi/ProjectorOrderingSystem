@@ -40,7 +40,7 @@ export default {
             //     list: [], // 商品列表
             // },
             oOrder: {
-                curPaymentMethod: '', //支付时选择的支付方式
+                curPaymentMethod: '', //当前支付时选择的支付方式
                 // 一个订单完成后，会把[购买物品、支付方式、支付时间]加入list
                 // 一个用户在点击“上齐了”之前的每次支付生成一个订单，汇集到oOrder里
                 list: [],
@@ -65,6 +65,9 @@ export default {
         cart(){
             return this.$store.state.oCart;
         },
+        total(){
+            return this.$store.getters.nCartAmount;
+        },
     },
     methods:{
         // 两款商品可以同名但id肯定不同，如果用户买了两个同名商品，这里用id来区分
@@ -76,6 +79,7 @@ export default {
             });
             if(oFound){ // 有同款商品，则该款商品数量加一
                 oFound.amount++;
+                this.$store.commit('addAmount');
             }
             else{ // 否则购物车列表新加一项
                 // this.cart.list.push({
@@ -96,16 +100,24 @@ export default {
         // 支付成功，填写订单状态，然后清空购物车
         paySuccess(list){
             let date = new Date();
-            this.oOrder.list.push({
+            // this.oOrder.list.push({
+            //     items: list,
+            //     total: this.total,
+            //     paymentMethod: this.oOrder.curPaymentMethod==='wechat'?'微信':'支付宝',
+            //     time: date.getMonth()+1 +'月'+ date.getDate() +'日　'
+            //             + date.getHours() +'时'+ date.getMinutes() + '分'
+            //             + date.getSeconds() +'秒',
+            // });
+            this.$store.commit('pushOrder', {
                 items: list,
-                total: this.cart.total,
-                paymentMethod: this.oOrder.curPaymentMethod==='wechat'?'微信':'支付宝',
+                total: this.total,
+                paymentMethod: this.$store.state.oOrder.curPaymentMethod==='wechat'?'微信':'支付宝',
                 time: date.getMonth()+1 +'月'+ date.getDate() +'日　'
                         + date.getHours() +'时'+ date.getMinutes() + '分'
                         + date.getSeconds() +'秒',
             });
             // 每一个单独订单的价格汇总到总订单价格
-            this.oOrder.total += this.cart.total;
+            this.oOrder.total += this.total;
             // this.oCart = {
             //     total: 0,
             //     list: [],
@@ -115,12 +127,13 @@ export default {
 
         // 点击“已上齐”按钮，清空订单记录
         complete(){
-            this.nOrderState = 0;
-            this.oOrder = {
-                curPaymentMethod: '',
-                list: [],
-                total: 0,
-            };
+            // this.nOrderState = 0;
+            // this.oOrder = {
+            //     curPaymentMethod: '',
+            //     list: [],
+            //     total: 0,
+            // };
+            this.$store.commit('complete');
         },
 
         // 全局的触摸反馈的动效，本来是加载#app上的
@@ -176,7 +189,7 @@ export default {
             this.sAlertMsg = '读取店铺配置失败：' + err;
         });
     },
-}
+};
 
 </script>
 

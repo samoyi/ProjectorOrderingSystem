@@ -3,7 +3,7 @@
         <div id="pay" :style="{transform: 'rotateZ(' + position*180 + 'deg)'}"
                 v-if="!paySuccess">
             <div id="payCode">
-                <header>需要支付：{{cart.total}}元</header>
+                <header>需要支付：{{total}}元</header>
                 <div v-if="sCodeURL"  id="code">
                     <p v-show="!bImgLoad">{{sLoadingTip}}</p>
                     <img @load="imgLoad" @error="imgErr"
@@ -40,8 +40,6 @@ let timer = null; // 显示二维码之后轮询是否扫码支付成功
 
 export default {
     props: [ "order"],
-    components: {
-    },
     data () {
         return {
             sCodeURL: '',
@@ -56,7 +54,18 @@ export default {
             },
         }
     },
-
+    computed: {
+        cart(){
+            console.log(this.$store.state.oCart);
+            return this.$store.state.oCart;
+        },
+        total(){
+            return this.$store.getters.nCartAmount;
+        },
+        position(){
+            return this.$store.state.nPosition;
+        },
+    },
     methods: {
         back(){
             this.$router.go(-1);
@@ -66,7 +75,7 @@ export default {
         },
         getOrderParas(sPayMethod){
             let ratio = sPayMethod==='alipay' ? 1 : 100;
-            return 'total=' + this.cart.total*ratio +
+            return 'total=' + this.total*ratio +
                     '&brand=' + this.$parent.oClientConfig.merchant +
                     '&store=' + this.$parent.oClientConfig.store +
                     '&machine=' + this.$parent.oClientConfig.table +
@@ -129,17 +138,9 @@ export default {
             this.$emit('paySuccess', this.cart.list);
         }
     },
-    computed: {
-        cart(){
-            console.log(this.$store.state.oCart);
-            return this.$store.state.oCart;
-        },
-        position(){
-            return this.$store.state.nPosition;
-        },
-    },
     mounted(){
-        let sPayMethod = this.$parent.oOrder.curPaymentMethod;
+        let sPayMethod = this.$store.state.oOrder.curPaymentMethod;
+        // let sPayMethod = this.$parent.oOrder.curPaymentMethod;
         if(sPayMethod === 'alipay'){
             this.aliPay();
         }

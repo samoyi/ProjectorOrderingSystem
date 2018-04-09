@@ -19,26 +19,26 @@
                 <header>消费明细</header>
                 <div id="tableWrapper">
                     <div id="allOrders">
-                        <div class="orderWrapper" v-for="order in order.list">
+                        <div class="orderWrapper" v-for="item in order.list">
                             <div class="total">
-                                <span>支付金额：¥{{order.total}}　</span>
-                                <span>支付方式：{{order.paymentMethod}}</span>
+                                <span>支付金额：¥{{total}}　</span>
+                                <span>支付方式：{{item.paymentMethod}}</span>
                                 <br />
-                                <span>支付时间：{{order.time}}</span>
+                                <span>支付时间：{{item.time}}</span>
                             </div>
                             <table class="table">
-                                <tr class="tr" v-for="(item,index) in order.items">
+                                <tr class="tr" v-for="(item,index) in item.items">
                                     <td class="td">{{item.name}}</td>
                                     <td class="td">
                                         {{item.amount}}
                                     </td>
-                                    <td class="td">{{item.price/100}}</td>
+                                    <td class="td">{{item.price*item.amount/100}}</td>
                                 </tr>
                             </table>
                         </div>
                     </div>
                 </div>
-                <div id="total">总计消费：¥{{order.total}}</div>
+                <div id="total">总计消费：¥{{orderTotal}}</div>
             </div>
             <div class="complete" @click="complete">已上齐</div>
             <div class="closeOrder" @click="closeOrder">关闭</div>
@@ -54,7 +54,7 @@ import styleConfig from '../js/styleConfig';
 
 export default {
     name: 'main_menu',
-    props: ["storeData", "orderState", "order"],
+    props: ["storeData", "orderState"],
     components: {
         'dial-component': dial,
         // 'custom-alert': customAlert,
@@ -65,6 +65,20 @@ export default {
             primaryCatas:[],
             bDisplayOrder: false,
         }
+    },
+    computed: {
+        total(){
+            return this.$store.getters.nCartAmount;
+        },
+        position(){
+            return this.$store.state.nPosition;
+        },
+        order(){
+            return this.$store.state.oOrder;
+        },
+        orderTotal(){
+            return this.$store.getters.nOrderTotal;
+        },
     },
     methods: {
 
@@ -92,13 +106,6 @@ export default {
             this.bDisplayOrder = false;
         },
     },
-    computed: {
-        position(){
-            return this.$store.state.nPosition;
-        },
-    },
-    mounted(){
-    }
 }
 </script>
 
