@@ -11,8 +11,7 @@
 
 export default {
     data () {
-        return {
-        }
+        return {}
     },
     methods: {
         back(){
@@ -30,7 +29,7 @@ export default {
     position: absolute; top: 0; left: 0;
     iframe{
         width: 100%; height: 100%;
-        transform: scale3d(0.65, 0.65, 0.65); 
+        transform: scale3d(0.65, 0.65, 0.65);
     }
     .back{
         background-color: $BASIC_BLUE;

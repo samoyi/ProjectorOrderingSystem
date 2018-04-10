@@ -17,8 +17,7 @@ export default {
         default: '',
     },
     data () {
-        return {
-        }
+        return {}
     },
     methods: {
         close(){

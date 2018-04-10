@@ -5,9 +5,14 @@ import Vuex from 'vuex';
 Vue.use(Vuex);
 
 const store = new Vuex.Store({
-    // strict: true,
     strict: process.env.NODE_ENV !== 'production',
     state: {
+        // 店铺数据
+        storeData: {
+            primaryCatas: [],
+            menu: {},
+        },
+
         // 在操作方向有影响的情况下，例如进入购物车。0为当前方向，1为对向
         // 用于计算元素显示时的rotete是0还是180
         nPosition: 0,
@@ -27,10 +32,13 @@ const store = new Vuex.Store({
             list: [],
             total: 0, // 总订单价格
         },
+
+        // 付款成功后，nOrderState变为1，清空购物车，首页可以查看订单详情
+        // 用户点击已上齐，则点餐结束，清空订单详情，nOrderState变为0
+        nOrderState: 0,
     },
     getters: {
-        // 这里吧购物车总金额单独出来作为了getter，不过组件里使用总金额的地方还都是使
-        // 用oCart.total。
+        // 当前购物车商品总金额
         nCartAmount(state){
             let nTotal = 0;
             state.oCart.list.forEach(item=>{
@@ -38,12 +46,20 @@ const store = new Vuex.Store({
             });
             return nTotal;
         },
+
+        // 点击“已上齐”之前的若干笔支付的总金额
         nOrderTotal(state){
             return state.oOrder.list.map(item=>item.total)
                         .reduce((accr, cur)=>{return accr + cur}, 0);
         },
     },
     mutations: {
+
+        // 加载店铺
+        loadStoreData(state, oConfig){
+            state.storeData = oConfig;
+        },
+
         // 设定当前的显示方向
         changePosition(state, nStatus){
             if(nStatus===1){
@@ -56,33 +72,40 @@ const store = new Vuex.Store({
                 throw new RangeError('nPosition must be 0 or 1');
             }
         },
+
         // 将一个商品加入购物车
         addToCart(state, oItem){
             state.oCart.list.push(oItem);
         },
-        // 支付成功之后清空购物车
-        emptyCart(state){
-            state.oCart = {
-                // total: 0,
+
+        // 支付成功
+        paySuccess(state){
+            state.oCart = { // 清空购物车
                 list: [],
             };
+            state.nOrderState = 1;
         },
+
         // 购物车里点击减号
         minusAmount(state, sID){
             state.oCart.list.find(item=>item.id===sID).amount--;
         },
+
         // 购物车里点击加号
         addAmount(state, sID){
             state.oCart.list.find(item=>item.id===sID).amount++;
         },
+
         // 记录当前支付方法（支付宝或微信），用于在总订单列表中显示每笔支付方法
         recordCurPaymentMethod(state, sMethod){
             state.oOrder.curPaymentMethod = sMethod;
         },
+
         // 将新支付的一笔订单加入总订单
         pushOrder(state, order){
             state.oOrder.list.push(order);
         },
+
         // 点击“已上齐”按钮，清空订单记录
         complete(state){
             state.oOrder = {
@@ -90,6 +113,7 @@ const store = new Vuex.Store({
                 list: [],
                 total: 0,
             };
+            state.nOrderState = 0;
         },
     },
 });

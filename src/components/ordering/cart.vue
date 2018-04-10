@@ -33,13 +33,8 @@
 
 
 export default {
-    props: [],
-    components: {
-    },
     data () {
-        return {
-            // oCart: this.cart,
-        }
+        return {}
     },
     methods: {
         // 商品数量减一

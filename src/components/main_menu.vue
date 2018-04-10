@@ -43,21 +43,16 @@
             <div class="complete" @click="complete">已上齐</div>
             <div class="closeOrder" @click="closeOrder">关闭</div>
         </div>
-        <!-- <custom-alert></custom-alert> -->
     </div>
 </template>
 
 <script>
 import dial from './ordering/dial';
-// import customAlert from './public/customAlert';
 import styleConfig from '../js/styleConfig';
 
 export default {
-    name: 'main_menu',
-    props: ["storeData", "orderState"],
     components: {
         'dial-component': dial,
-        // 'custom-alert': customAlert,
     },
     data () {
         return {
@@ -67,6 +62,9 @@ export default {
         }
     },
     computed: {
+        storeData(){
+            return this.$store.state.storeData;
+        },
         total(){
             return this.$store.getters.nCartAmount;
         },
@@ -79,6 +77,9 @@ export default {
         orderTotal(){
             return this.$store.getters.nOrderTotal;
         },
+        orderState(){
+            return this.$store.state.nOrderState;
+        },
     },
     methods: {
 
@@ -89,7 +90,6 @@ export default {
 
         // 主界面点击查看订单，显示订单
         showOrder(nPosition){
-            // this.$parent.nPosition = nPosition;
             this.$store.commit('changePosition', nPosition);
             this.bDisplayOrder = true;
         },
@@ -99,10 +99,9 @@ export default {
             this.bDisplayOrder = false;
         },
 
-        // 点击“已上齐”，通知App.vue
+        // 点击“已上齐”
         complete(){
-            this.$emit('complete');
-            this.$parent.nOrderState = 0;
+            this.$store.commit('complete');
             this.bDisplayOrder = false;
         },
     },

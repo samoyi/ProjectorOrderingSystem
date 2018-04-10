@@ -129,7 +129,6 @@ let listAniReq = null; // 自动旋转的 requestAnimationFrame
 let oList = null; // 菜单节点
 
 export default {
-    props: ["storeData"],
     data () {
         return {
             dialDiameter: styleConfig.ORDERING_DIAL_DIAMETER,
@@ -155,16 +154,27 @@ export default {
     components: {
         'dial-component': dial,
     },
+    computed: {
+        displayedList(){
+            let items = this.storeData.menu[this.selectedCata],
+                nCurPageIndex = this.pageSwitcher.oPageIndex[this.selectedCata];
+            return items.slice(nCurPageIndex*10, (nCurPageIndex+1)*10);
+        },
+        cart(){
+            return this.$store.state.oCart;
+        },
+        storeData(){
+            return this.$store.state.storeData;
+        },
+    },
     methods: {
         selectCata(sCata){
             this.selectedCata = sCata;
             this.selectedItem = false;
             this.selectedIndex = -1;
-console.time('update');
+
             // 商品入场动画结束删除其动画样式，不影响后续的拨动
-            //
             this.$nextTick(()=>{
-                console.time('tick');
                 oList = document.querySelector('#list');
                 oList.style.animation = 'listAni 2s forwards ease-out';
 
@@ -243,17 +253,32 @@ console.time('update');
         },
 
         add(sCata, oItem){
-            this.$emit('add', sCata, oItem);
+            // this.$emit('add', sCata, oItem);
+
+            // 查找新加入的商品在购物车里是否有同款商品
+            let oFound = this.cart.list.find(item=>{ // 查找是否加入同
+                return item.id === oItem.id;
+            });
+            if(oFound){ // 有同款商品，则该款商品数量加一
+                this.$store.commit('addAmount', oItem.id);
+            }
+            else{ // 否则购物车列表新加一项
+                this.$store.commit('addToCart', {
+                    id: oItem.id,
+                    amount: 1,
+                    price: oItem.price,
+                    name: oItem.name,
+                });
+            }
+
+
             this.tipIn = true;
             setTimeout(()=>{
                 this.tipIn = false;
             }, 1000);
-
         },
         order(nPosition){
-            // this.$emit('order');
             this.$router.push('cart');
-            // this.$parent.nPosition = nPosition;
             this.$store.commit('changePosition', nPosition);
         },
         back(){
@@ -276,9 +301,7 @@ console.time('update');
     watch:{
         selectedCata(){
             // 大菜单转动
-console.timeEnd('update');
             this.$nextTick(()=>{
-console.timeEnd('tick');
                 const nListRadius = styleConfig.ORDERING_LIST_DIAMETER/2;
                 const dialRotation = new DialRotation.Rotation(
                             styleConfig.SCREEN_WIDTH/2
@@ -334,17 +357,6 @@ console.timeEnd('tick');
             });
 
         }
-    },
-    computed: {
-        displayedList(){
-            let items = this.storeData.menu[this.selectedCata],
-                nCurPageIndex = this.pageSwitcher.oPageIndex[this.selectedCata];
-            return items.slice(nCurPageIndex*10, (nCurPageIndex+1)*10);
-        },
-        cart(){
-            console.log(this.$store.state.oCart);
-            return this.$store.state.oCart;
-        },
     },
     mounted(){
 

@@ -39,7 +39,6 @@ import ajax from '../../js/ajax';
 let timer = null; // 显示二维码之后轮询是否扫码支付成功
 
 export default {
-    props: [ "order"],
     data () {
         return {
             sCodeURL: '',
@@ -56,7 +55,6 @@ export default {
     },
     computed: {
         cart(){
-            console.log(this.$store.state.oCart);
             return this.$store.state.oCart;
         },
         total(){
@@ -64,6 +62,9 @@ export default {
         },
         position(){
             return this.$store.state.nPosition;
+        },
+        order(){
+            return this.$store.state.oOrder;
         },
     },
     methods: {
@@ -87,10 +88,15 @@ export default {
             ajax.ajax_post(url, data, res=>{
                 let aRes = res.trim().split('+');
                 this.sCodeURL = aRes[1];
-                clearInterval(timer);
-                timer = setInterval(()=>{
-                    this.pollingCheckState(aRes[0].trim());
-                }, 1000);
+                // clearInterval(timer);
+                // timer = setInterval(()=>{
+                //     this.pollingCheckState(aRes[0].trim());
+                // }, 1000);
+                // 模拟支付成功。正常是上面注释掉的代码
+                setTimeout(()=>{
+                    this.sCodeURL = '';
+                    this.paySuccessCallback();
+                }, 500);
             }, err=>{
                 this.$parent.sAlertMsg = '获取微信支付二维码失败，请返回重试：' + err;
             });
@@ -134,13 +140,22 @@ export default {
         },
         paySuccessCallback(){
             this.paySuccess = true;
-            this.$parent.nOrderState = 1;
-            this.$emit('paySuccess', this.cart.list);
+            // 新的一笔支付加入总订单
+            let date = new Date();
+            this.$store.commit('pushOrder', {
+                items: this.cart.list,
+                total: this.total,
+                paymentMethod: this.$store.state.oOrder.curPaymentMethod==='wechat'?'微信':'支付宝',
+                time: date.getMonth()+1 +'月'+ date.getDate() +'日　'
+                        + date.getHours() +'时'+ date.getMinutes() + '分'
+                        + date.getSeconds() +'秒',
+            });
+            // 提交支付成功
+            this.$store.commit('paySuccess');
         }
     },
     mounted(){
-        let sPayMethod = this.$store.state.oOrder.curPaymentMethod;
-        // let sPayMethod = this.$parent.oOrder.curPaymentMethod;
+        let sPayMethod = this.order.curPaymentMethod;
         if(sPayMethod === 'alipay'){
             this.aliPay();
         }

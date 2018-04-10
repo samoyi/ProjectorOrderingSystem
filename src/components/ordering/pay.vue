@@ -30,7 +30,6 @@
 
 
 export default {
-    props: ["order"],
     data () {
         return {}
     },
@@ -54,12 +53,10 @@ export default {
         },
         alipay(){
             this.$router.push('payCode');
-            // this.$parent.oOrder.curPaymentMethod = 'alipay';
             this.$store.commit('recordCurPaymentMethod', 'alipay');
         },
         wechat(){
             this.$router.push('payCode');
-            // this.$parent.oOrder.curPaymentMethod = 'wechat';
             this.$store.commit('recordCurPaymentMethod', 'wechat');
         },
     },
