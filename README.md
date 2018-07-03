@@ -1,8 +1,1 @@
-# projector-ordering-system
-
-# TODO
-* 外部变量.md
-* 提供刷新按钮
-* TODO: TextAni
-* TODO: scssFor
-* z-index管理
+# 这是旧版本，新版在 `vuex` 分支
