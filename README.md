@@ -1,11 +1,6 @@
 # projector-ordering-system
 
-# TODO
-* 外部变量.md
-* 提供刷新按钮
-* TODO: TextAni
-* TODO: scssFor
-* z-index管理
+**详细的文档在 `Doc` 目录内**
 
 ## 开发工具
 功能 | 工具
@@ -16,3 +11,11 @@
 JS编译 | Babel (env、stage-3、polyfill)
 CSS编译 | Scss
 测试 | Karma、Mocha
+
+
+# TODO
+* 外部变量.md
+* 提供刷新按钮
+* TODO: TextAni
+* TODO: scssFor
+* z-index管理
